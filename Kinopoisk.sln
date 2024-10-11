@@ -3,8 +3,49 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Api", "KinopoiskDB\KinopoiskDB.Api.csproj", "{DAA5E5DD-A17C-4137-BA6E-38208F345643}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6AED13F0-F451-4703-AD2B-AE0DD1FADD51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Bll", "KinopoiskDB.Bll\KinopoiskDB.Bll.csproj", "{5A1DA6D9-ECFD-40C2-A45C-065C4F75FF0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Dal", "KinopoiskDB.DAL\KinopoiskDB.Dal.csproj", "{9EC506BD-4FA6-4D05-9688-E82C128E040B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Core", "KinopoiskDB.Core\KinopoiskDB.Core.csproj", "{A3CC0469-ED0B-44AB-9EAD-03C551C59F0B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAA5E5DD-A17C-4137-BA6E-38208F345643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAA5E5DD-A17C-4137-BA6E-38208F345643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAA5E5DD-A17C-4137-BA6E-38208F345643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAA5E5DD-A17C-4137-BA6E-38208F345643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1DA6D9-ECFD-40C2-A45C-065C4F75FF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1DA6D9-ECFD-40C2-A45C-065C4F75FF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1DA6D9-ECFD-40C2-A45C-065C4F75FF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1DA6D9-ECFD-40C2-A45C-065C4F75FF0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC506BD-4FA6-4D05-9688-E82C128E040B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC506BD-4FA6-4D05-9688-E82C128E040B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC506BD-4FA6-4D05-9688-E82C128E040B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC506BD-4FA6-4D05-9688-E82C128E040B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3CC0469-ED0B-44AB-9EAD-03C551C59F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3CC0469-ED0B-44AB-9EAD-03C551C59F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3CC0469-ED0B-44AB-9EAD-03C551C59F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3CC0469-ED0B-44AB-9EAD-03C551C59F0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DAA5E5DD-A17C-4137-BA6E-38208F345643} = {6AED13F0-F451-4703-AD2B-AE0DD1FADD51}
+		{5A1DA6D9-ECFD-40C2-A45C-065C4F75FF0E} = {6AED13F0-F451-4703-AD2B-AE0DD1FADD51}
+		{9EC506BD-4FA6-4D05-9688-E82C128E040B} = {6AED13F0-F451-4703-AD2B-AE0DD1FADD51}
+		{A3CC0469-ED0B-44AB-9EAD-03C551C59F0B} = {6AED13F0-F451-4703-AD2B-AE0DD1FADD51}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1D73215-5378-402E-ABC1-5E4580B5CEFB}
 	EndGlobalSection
 EndGlobal
