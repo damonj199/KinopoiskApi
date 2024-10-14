@@ -1,3 +1,5 @@
+using KinopoikDB.Api.Services;
+
 using KinopoiskDB.Dal.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<KinopoiskDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddHttpClient<IKinopoiskService, KinopoiskService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
