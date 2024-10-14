@@ -24,7 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\KinopoiskDB.Bll\KinopoiskDB.Bll.csproj" />
     <ProjectReference Include="..\KinopoiskDB.Core\KinopoiskDB.Core.csproj" />
-    <ProjectReference Include="..\KinopoiskDB.DAL\KinopoiskDB.Dal.csproj" />
+    <ProjectReference Include="..\KinopoiskDB.DAL\KinopoiskDB.Dal.PostgreSQL.csproj" />
   </ItemGroup>
 
 </Project>
