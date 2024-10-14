@@ -3,8 +3,49 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7E8FA774-AD64-421D-B37F-ED6A21778414}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoikDB.Api", "KinopoikDB.Api\KinopoikDB.Api.csproj", "{21FDFEFF-1267-4B96-B372-EC6D2434E5F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Application", "KinopoiskDB.Application\KinopoiskDB.Application.csproj", "{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Dal.PostgreSQL", "KinopoiskDB.Dal.PostgreSQL\KinopoiskDB.Dal.PostgreSQL.csproj", "{97C45861-5635-4F4D-8FAC-08EA44ED83D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Core", "KinopoiskDB.Core\KinopoiskDB.Core.csproj", "{D9208BF9-AA5B-4421-905A-22B70C2A835D}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21FDFEFF-1267-4B96-B372-EC6D2434E5F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21FDFEFF-1267-4B96-B372-EC6D2434E5F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21FDFEFF-1267-4B96-B372-EC6D2434E5F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21FDFEFF-1267-4B96-B372-EC6D2434E5F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97C45861-5635-4F4D-8FAC-08EA44ED83D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97C45861-5635-4F4D-8FAC-08EA44ED83D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97C45861-5635-4F4D-8FAC-08EA44ED83D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97C45861-5635-4F4D-8FAC-08EA44ED83D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{21FDFEFF-1267-4B96-B372-EC6D2434E5F0} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
+		{4410F39E-ECB3-4B47-B3E2-52275BF8AC61} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
+		{97C45861-5635-4F4D-8FAC-08EA44ED83D6} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
+		{D9208BF9-AA5B-4421-905A-22B70C2A835D} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CDAF61D7-7FA7-4AA2-A6EF-41D053C18BF6}
 	EndGlobalSection
 EndGlobal
