@@ -1,6 +1,0 @@
-@KinopoiskDB_HostAddress = http://localhost:5103
-
-GET {{KinopoiskDB_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
