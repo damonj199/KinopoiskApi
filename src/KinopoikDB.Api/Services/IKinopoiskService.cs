@@ -1,7 +1,9 @@
-﻿namespace KinopoikDB.Api.Services;
+﻿using KinopoiskDB.Application.Dtos;
+
+namespace KinopoikDB.Api.Services;
 
 public interface IKinopoiskService
 {
-    Task<dynamic> SearchMoviesAsync(string title, int? year, string genre);
-    Task<dynamic> GetPremieresAsync(DateTime month);
+    Task<MoviesDto> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken);
+    Task<MoviesDto> GetPremieresAsync(int year, string month, CancellationToken cancellationToken);
 }

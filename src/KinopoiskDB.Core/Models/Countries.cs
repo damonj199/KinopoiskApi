@@ -1,4 +1,4 @@
-﻿using KinopoiskDB.Application.Dtos;
+﻿namespace KinopoiskDB.Core.Models;
 
 public class Countries
 {

@@ -1,8 +1,8 @@
 ﻿namespace KinopoiskDB.Application.Dtos;
 
-public class Genres
+public class GenresDto
 {
     public int Id { get; set; }
     public string Genre { get; set; }
-    public List<Movies> Movies { get; set; }
+    public List<MoviesDto> Movies { get; set; }
 }

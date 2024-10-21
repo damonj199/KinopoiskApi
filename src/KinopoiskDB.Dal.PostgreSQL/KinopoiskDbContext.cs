@@ -1,4 +1,4 @@
-﻿using KinopoiskDB.Application.Dtos;
+﻿using KinopoiskDB.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace KinopoiskDB.Dal.PostgreSQL;

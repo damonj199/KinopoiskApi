@@ -1,8 +1,12 @@
 ﻿using KinopoikDB.Api.Services;
+
+using KinopoiskDB.Application.Dtos;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace KinopoikDB.Api.Controllers;
-
+[ApiController]
+[Route("api/movie/")]
 public class MoviesController : Controller
 {
     private readonly IKinopoiskService _kinopoiskService;
@@ -13,17 +17,16 @@ public class MoviesController : Controller
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string title, [FromQuery] int? year, [FromQuery] string genre)
+    public async Task<ActionResult<List<MoviesDto>>> SearchMoviesAsync([FromQuery] string title, [FromQuery] int? year, CancellationToken cancellationToken)
     {
-        var movies = await _kinopoiskService.SearchMoviesAsync(title, year, genre);
+        var movies = await _kinopoiskService.SearchMoviesAsync(title, year, cancellationToken);
         return Ok(movies);
     }
 
     [HttpGet("premieres")]
-    public async Task<IActionResult> GetPremieres()
+    public async Task<ActionResult<List<MoviesDto>>> GetPremieresAsync([FromQuery] int year, [FromQuery] string month, CancellationToken cancellationToken)
     {
-        var currentDate = DateTime.Now;
-        var premieres = await _kinopoiskService.GetPremieresAsync(currentDate);
+        var premieres = await _kinopoiskService.GetPremieresAsync(year, month, cancellationToken);
         return Ok(premieres);
     }
 }

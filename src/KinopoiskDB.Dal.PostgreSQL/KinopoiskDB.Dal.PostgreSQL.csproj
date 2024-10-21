@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KinopoiskDB.Application\KinopoiskDB.Application.csproj" />
+    <ProjectReference Include="..\KinopoiskDB.Core\KinopoiskDB.Core.csproj" />
   </ItemGroup>
 
 </Project>
