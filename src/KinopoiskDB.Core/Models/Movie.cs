@@ -1,6 +1,6 @@
 ﻿namespace KinopoiskDB.Core.Models;
 
-public class Movies
+public class Movie
 {
     public Guid Id { get; set; }
     public long KinopoiskId { get; set; }
@@ -10,6 +10,6 @@ public class Movies
     public int? Year { get; set; }
     public string? PosterUrl { get; set; }
     public string? Description { get; set; }
-    public List<Countries>? Countries { get; set; }
-    public List<Genres>? Genres { get; set; }
+    public List<Country> Countries { get; set; } = [];
+    public List<Genre> Genres { get; set; } = [];
 }

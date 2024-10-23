@@ -5,7 +5,6 @@ using AutoMapper;
 using KinopoiskDB.Application;
 using KinopoiskDB.Application.Dtos;
 using KinopoiskDB.Core.Models;
-using KinopoiskDB.Dal.PostgreSQL.Repository;
 
 using Microsoft.Extensions.Configuration;
 
@@ -14,23 +13,21 @@ namespace KinopoiskDB.Infrastructure;
 public class KinopoiskService : IKinopoiskService
 {
     private readonly IMoviesRepository _moviesRepository;
-    private readonly IKinopoiskService _kinopoiskService;
     private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
     private readonly string _apiKey;
     private readonly string _apiUrl;
 
-    public KinopoiskService(HttpClient httpClient, IKinopoiskService kinopoiskService, IConfiguration configuration, IMoviesRepository moviesRepository, IMapper mapper)
+    public KinopoiskService(HttpClient httpClient, IConfiguration configuration, IMoviesRepository moviesRepository, IMapper mapper)
     {
         _httpClient = httpClient;
         _mapper = mapper;
         _apiUrl = configuration["Kinopoisk:ApiUrl"];
         _httpClient.DefaultRequestHeaders.Add("X-API-KEY", configuration["Kinopoisk:ApiKey"]);
-        _kinopoiskService = kinopoiskService;
         _moviesRepository = moviesRepository;
     }
 
-    public async Task<List<MoviesDto>> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<MovieDto>> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken)
     {
         var hasTitle = !string.IsNullOrEmpty(title);
         var hasYear = year > 1000;
@@ -63,10 +60,10 @@ public class KinopoiskService : IKinopoiskService
             return result;
         }
 
-        return new List<MoviesDto>();
+        return new List<MovieDto>();
     }
 
-    public async Task<List<MoviesDto>> GetPremieresAsync(int year, int month, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<MovieDto>> GetPremieresAsync(int year, int month, CancellationToken cancellationToken)
     {
         const string url = "v2.2/films/premieres";
         var currentDate = DateTimeOffset.UtcNow.Date;
@@ -103,25 +100,25 @@ public class KinopoiskService : IKinopoiskService
         };
     }
 
-    public async Task<List<MoviesDto>> SyncMovieDataAsync(string jsonResponse)
+    public async Task<IReadOnlyList<MovieDto>> SyncMovieDataAsync(string jsonResponse)
     {
         var moviesPageDto = JsonSerializer.Deserialize<MoviesPageDto>(jsonResponse, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
 
-        List<MoviesDto> moviesDto = moviesPageDto?.Items ?? new List<MoviesDto>();
+        List<MovieDto> moviesDto = moviesPageDto?.Items ?? new List<MovieDto>();
 
-        List<Movies> movies = MapMoviesDtoToMovies(moviesDto);
+        List<Movie> movies = MapMoviesDtoToMovies(moviesDto);
 
         var films = await _moviesRepository.SyncMovieDataAsync(movies);
 
-        return _mapper.Map<List<MoviesDto>>(films);
+        return _mapper.Map<List<MovieDto>>(films);
     }
 
-    public List<Movies> MapMoviesDtoToMovies(List<MoviesDto> movieDtos)
+    public List<Movie> MapMoviesDtoToMovies(List<MovieDto> movieDtos)
     {
-        return movieDtos.Select(dto => new Movies
+        return movieDtos.Select(dto => new Movie
         {
             Id = dto.Id,
             KinopoiskId = dto.KinopoiskId,
@@ -131,8 +128,18 @@ public class KinopoiskService : IKinopoiskService
             Year = dto.Year,
             PosterUrl = dto.PosterUrl,
             Description = dto.Description,
-            Countries = dto.Countries,
+            Countries = dto.Countries
+                .Select(c => new Country
+                {
+                    Value = c.Country,
+                })
+                .ToList(),
             Genres = dto.Genres
+                .Select(g => new Genre
+                {
+                    Value = g.Genre   
+                })
+                .ToList()
         }).ToList();
     }
 }

@@ -14,9 +14,9 @@ public class KinopoiskDbContext : DbContext
         Database.EnsureCreated();
     }
 
-    public DbSet<Countries> Countries { get; set; }
-    public DbSet<Genres> Genres { get; set; }
-    public DbSet<Movies> Movies { get; set; }
+    public DbSet<Country> Countries { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<Movie> Movies { get; set; }
 
     public async Task<DbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
     {

@@ -4,7 +4,7 @@ namespace KinopoiskDB.Application;
 
 public interface IKinopoiskService
 {
-    Task<List<MoviesDto>> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken);
-    Task<List<MoviesDto>> GetPremieresAsync(int year, int month, CancellationToken cancellationToken);
-    Task<List<MoviesDto>> SyncMovieDataAsync(string jsonResponse);
+    Task<IReadOnlyList<MovieDto>> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MovieDto>> GetPremieresAsync(int year, int month, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MovieDto>> SyncMovieDataAsync(string jsonResponse);
 }

@@ -9,6 +9,6 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<Movies, MoviesDto>();
+        CreateMap<Movie, MovieDto>();
     }
 }
