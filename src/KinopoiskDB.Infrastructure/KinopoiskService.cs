@@ -14,19 +14,17 @@ namespace KinopoiskDB.Infrastructure;
 public class KinopoiskService : IKinopoiskService
 {
     private readonly IMoviesRepository _moviesRepository;
-    private readonly IKinopoiskService _kinopoiskService;
     private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
     private readonly string _apiKey;
     private readonly string _apiUrl;
 
-    public KinopoiskService(HttpClient httpClient, IKinopoiskService kinopoiskService, IConfiguration configuration, IMoviesRepository moviesRepository, IMapper mapper)
+    public KinopoiskService(HttpClient httpClient, IConfiguration configuration, IMoviesRepository moviesRepository, IMapper mapper)
     {
         _httpClient = httpClient;
         _mapper = mapper;
         _apiUrl = configuration["Kinopoisk:ApiUrl"];
         _httpClient.DefaultRequestHeaders.Add("X-API-KEY", configuration["Kinopoisk:ApiKey"]);
-        _kinopoiskService = kinopoiskService;
         _moviesRepository = moviesRepository;
     }
 
