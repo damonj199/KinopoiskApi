@@ -10,6 +10,6 @@ public class MovieDto
     public int? Year { get; set; }
     public string? PosterUrl { get; set; }
     public string? Description { get; set; }
-    public List<CountryDto> Countries { get; set; } = [];
-    public List<GenreDto> Genres { get; set; } = [];
+    public CountryDto[] Countries { get; set; } = [];
+    public GenreDto[] Genres { get; set; } = [];
 }
