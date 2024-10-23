@@ -1,5 +1,7 @@
-using KinopoikDB.Api.Services;
+using KinopoiskDB.Application;
 using KinopoiskDB.Dal.PostgreSQL;
+using KinopoiskDB.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +15,6 @@ builder.Services.AddHttpClient<IKinopoiskService, KinopoiskService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-//builder.Services.ConfigureBllServices();
-//builder.Services.ConfigureDalServices();
 
 var app = builder.Build();
 

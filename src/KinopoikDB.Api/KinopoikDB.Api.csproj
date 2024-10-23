@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -26,8 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KinopoiskDB.Infrastructure\KinopoiskDB.Infrastructure.csproj" />
     <ProjectReference Include="..\KinopoiskDB.Application\KinopoiskDB.Application.csproj" />
+    <ProjectReference Include="..\KinopoiskDB.Core\KinopoiskDB.Core.csproj" />
     <ProjectReference Include="..\KinopoiskDB.Dal.PostgreSQL\KinopoiskDB.Dal.PostgreSQL.csproj" />
+    <ProjectReference Include="..\KinopoiskDB.Infrastructure\KinopoiskDB.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

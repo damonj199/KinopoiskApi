@@ -22,23 +22,6 @@ namespace KinopoiskDB.Dal.PostgreSQL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Countries", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Countries");
-                });
-
             modelBuilder.Entity("CountriesMovies", b =>
                 {
                     b.Property<int>("CountriesId")
@@ -69,7 +52,24 @@ namespace KinopoiskDB.Dal.PostgreSQL.Migrations
                     b.ToTable("GenresMovies");
                 });
 
-            modelBuilder.Entity("KinopoiskDB.Application.Dtos.Genres", b =>
+            modelBuilder.Entity("KinopoiskDB.Core.Models.Countries", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("KinopoiskDB.Core.Models.Genres", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,27 +86,32 @@ namespace KinopoiskDB.Dal.PostgreSQL.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("KinopoiskDB.Application.Dtos.Movies", b =>
+            modelBuilder.Entity("KinopoiskDB.Core.Models.Movies", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("KinopoiskId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<long>("KinopoiskId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NameEn")
+                        .HasColumnType("text");
 
                     b.Property<string>("NameOriginal")
                         .HasColumnType("text");
 
                     b.Property<string>("NameRu")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PosterUrl")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("Year")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int?>("Year")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -115,13 +120,13 @@ namespace KinopoiskDB.Dal.PostgreSQL.Migrations
 
             modelBuilder.Entity("CountriesMovies", b =>
                 {
-                    b.HasOne("Countries", null)
+                    b.HasOne("KinopoiskDB.Core.Models.Countries", null)
                         .WithMany()
                         .HasForeignKey("CountriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KinopoiskDB.Application.Dtos.Movies", null)
+                    b.HasOne("KinopoiskDB.Core.Models.Movies", null)
                         .WithMany()
                         .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -130,13 +135,13 @@ namespace KinopoiskDB.Dal.PostgreSQL.Migrations
 
             modelBuilder.Entity("GenresMovies", b =>
                 {
-                    b.HasOne("KinopoiskDB.Application.Dtos.Genres", null)
+                    b.HasOne("KinopoiskDB.Core.Models.Genres", null)
                         .WithMany()
                         .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KinopoiskDB.Application.Dtos.Movies", null)
+                    b.HasOne("KinopoiskDB.Core.Models.Movies", null)
                         .WithMany()
                         .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)

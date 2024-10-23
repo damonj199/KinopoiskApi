@@ -7,11 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7E8FA774-AD6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoikDB.Api", "src\KinopoikDB.Api\KinopoikDB.Api.csproj", "{21FDFEFF-1267-4B96-B372-EC6D2434E5F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Application", "src\KinopoiskDB.Application\KinopoiskDB.Application.csproj", "{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Application", "src\KinopoiskDB.Application\KinopoiskDB.Application.csproj", "{4410F39E-ECB3-4B47-B3E2-52275BF8AC61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Dal.PostgreSQL", "src\KinopoiskDB.Dal.PostgreSQL\KinopoiskDB.Dal.PostgreSQL.csproj", "{97C45861-5635-4F4D-8FAC-08EA44ED83D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Dal.PostgreSQL", "src\KinopoiskDB.Dal.PostgreSQL\KinopoiskDB.Dal.PostgreSQL.csproj", "{97C45861-5635-4F4D-8FAC-08EA44ED83D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Core", "src\KinopoiskDB.Core\KinopoiskDB.Core.csproj", "{D9208BF9-AA5B-4421-905A-22B70C2A835D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Core", "src\KinopoiskDB.Core\KinopoiskDB.Core.csproj", "{D9208BF9-AA5B-4421-905A-22B70C2A835D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Infrastructure", "src\KinopoiskDB.Infrastructure\KinopoiskDB.Infrastructure.csproj", "{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9208BF9-AA5B-4421-905A-22B70C2A835D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{4410F39E-ECB3-4B47-B3E2-52275BF8AC61} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
 		{97C45861-5635-4F4D-8FAC-08EA44ED83D6} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
 		{D9208BF9-AA5B-4421-905A-22B70C2A835D} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
+		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CDAF61D7-7FA7-4AA2-A6EF-41D053C18BF6}

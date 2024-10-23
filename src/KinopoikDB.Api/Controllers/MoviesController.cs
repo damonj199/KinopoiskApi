@@ -1,5 +1,4 @@
-﻿using KinopoikDB.Api.Services;
-
+﻿using KinopoiskDB.Application;
 using KinopoiskDB.Application.Dtos;
 
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +23,7 @@ public class MoviesController : Controller
     }
 
     [HttpGet("premieres")]
-    public async Task<ActionResult<List<MoviesDto>>> GetPremieresAsync([FromQuery] int year, [FromQuery] string month, CancellationToken cancellationToken)
+    public async Task<ActionResult<List<MoviesDto>>> GetPremieresAsync([FromQuery] int year, [FromQuery] int month, CancellationToken cancellationToken)
     {
         var premieres = await _kinopoiskService.GetPremieresAsync(year, month, cancellationToken);
         return Ok(premieres);

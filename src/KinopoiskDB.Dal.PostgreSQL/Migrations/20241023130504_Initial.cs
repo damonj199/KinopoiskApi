@@ -43,11 +43,13 @@ namespace KinopoiskDB.Dal.PostgreSQL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    KinopoiskId = table.Column<int>(type: "integer", nullable: false),
-                    NameRu = table.Column<string>(type: "text", nullable: false),
+                    KinopoiskId = table.Column<long>(type: "bigint", nullable: false),
+                    NameRu = table.Column<string>(type: "text", nullable: true),
+                    NameEn = table.Column<string>(type: "text", nullable: true),
                     NameOriginal = table.Column<string>(type: "text", nullable: true),
+                    Year = table.Column<int>(type: "integer", nullable: true),
                     PosterUrl = table.Column<string>(type: "text", nullable: true),
-                    Year = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
