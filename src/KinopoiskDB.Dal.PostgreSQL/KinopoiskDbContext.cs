@@ -9,10 +9,7 @@ namespace KinopoiskDB.Dal.PostgreSQL;
 
 public class KinopoiskDbContext : DbContext
 {
-    public KinopoiskDbContext(DbContextOptions<KinopoiskDbContext> options) : base(options) 
-    {
-        Database.EnsureCreated();
-    }
+    public KinopoiskDbContext(DbContextOptions<KinopoiskDbContext> options) : base(options) { }
 
     public DbSet<Country> Countries { get; set; }
     public DbSet<Genre> Genres { get; set; }

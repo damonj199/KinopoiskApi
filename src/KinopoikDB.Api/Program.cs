@@ -1,39 +1,19 @@
-using KinopoiskDB.Application;
-using KinopoiskDB.Dal.PostgreSQL;
-using KinopoiskDB.Infrastructure;
-
-using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.EntityFrameworkCore;
+using KinopoikDB.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var isDev = builder.Environment.IsDevelopment();
+if (isDev)
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 builder.Host.UseDefaultServiceProvider(options =>
 {
     options.ValidateScopes = isDev;
     options.ValidateOnBuild = isDev;
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddDbContext<KinopoiskDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
-builder.Services.AddHttpClient<IKinopoiskService, KinopoiskService>();
-
-builder.Services.AddControllers();
-builder.Services.AddRouting(options =>
-{
-    options.LowercaseQueryStrings = true;
-    options.LowercaseUrls = true;
-});
-
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddHttpLogging(options =>
-{
-    options.LoggingFields = HttpLoggingFields.Request;
-});
+builder.Services.ConfigureService(builder.Configuration);
 
 var app = builder.Build();
 

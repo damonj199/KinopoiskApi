@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Dal.PostgreSQL"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Core", "src\KinopoiskDB.Core\KinopoiskDB.Core.csproj", "{D9208BF9-AA5B-4421-905A-22B70C2A835D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskDB.Infrastructure", "src\KinopoiskDB.Infrastructure\KinopoiskDB.Infrastructure.csproj", "{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Infrastructure", "src\KinopoiskDB.Infrastructure\KinopoiskDB.Infrastructure.csproj", "{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

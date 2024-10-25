@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 *.swp
 /KinopoiskDB/appsettings.json
 /KinopoiskDB/appsettings.Development.json
+/src/KinopoikDB.Api/SecretSettings.cs

@@ -1,4 +1,6 @@
-﻿namespace KinopoiskDB.Application.Dtos;
+﻿using KinopoiskDB.Core.Enum;
+
+namespace KinopoiskDB.Application.Dtos;
 
 public class MovieDto
 {
@@ -8,6 +10,7 @@ public class MovieDto
     public string? NameEn { get; set; }
     public string? NameOriginal { get; set; }
     public int? Year { get; set; }
+    public Month? Month { get; set; }
     public string? PosterUrl { get; set; }
     public string? Description { get; set; }
     public CountryDto[] Countries { get; set; } = [];
