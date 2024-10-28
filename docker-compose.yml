@@ -6,6 +6,8 @@ services:
       dockerfile: src/KinopoikDB.Api/Dockerfile
     depends_on: 
       - postgres
+    networks:
+      - mynetwork
   
   postgres:
     container_name: "postgreSQL"
@@ -18,6 +20,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports: 
       - "5432:5432"
+    networks:
+      - mynetwork
 volumes:
   postgres_data:
+
+networks:
+  mynetwork:
+    driver: bridge
 

@@ -4,6 +4,7 @@ using KinopoiskDB.Core.Enum;
 using KinopoiskDB.Dal.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KinopoiskDB.Dal.PostgreSQL.Migrations
 {
     [DbContext(typeof(KinopoiskDbContext))]
-    partial class KinopoiskDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241028111724_AddEnumType")]
+    partial class AddEnumType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

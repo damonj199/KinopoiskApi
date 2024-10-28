@@ -25,6 +25,7 @@ public class MoviesRepository : BaseRepository, IMoviesRepository
             .Where(m => m.Year == year)
             .Select(m => new Movie
             {
+                Id = m.Id,
                 KinopoiskId = m.KinopoiskId,
                 NameRu = m.NameRu,
                 NameEn = m.NameEn,

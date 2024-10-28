@@ -32,10 +32,26 @@ public class KinopoiskService : IKinopoiskService
         var year = premiereRequest.Year;
         var month = premiereRequest.Month;
 
-        var movies = _moviesRepository.GetPremieresAsync(year, month, cancellationToken);
+        var movies = await _moviesRepository.GetPremieresAsync(year, month, cancellationToken);
         var premiere = _mapper.Map<List<MovieDto>>(movies);
 
         return premiere ?? [];
+    }
+
+    public async Task<int> AddFilms(PremiereRequest premiereRequest, CancellationToken cancellationToken)
+    {
+        var year = premiereRequest.Year;
+        var month = premiereRequest.Month;
+
+        var request = string.Format(_settings.PremieresEndpoint, year, month, cancellationToken);
+        var response = await _httpClient.GetAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var result = await SyncMovieDataAsync(jsonResponse);
+        var kinopoiskId = result.Count();
+
+        return kinopoiskId;
     }
 
     public async Task<IReadOnlyList<MovieDto>> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken)

@@ -10,7 +10,16 @@ public class MapperProfile : Profile
     public MapperProfile()
     {
         CreateMap<Movie, MovieDto>();
-        CreateMap<Genre, GenreDto>();
-        CreateMap<Country, CountryDto>();
+        CreateMap<MovieDto, Movie>();
+
+        CreateMap<Genre, GenreDto>()
+            .ForMember(a => a.Genre, b => b.MapFrom(s => s.Value));
+        CreateMap<GenreDto, Genre>()
+            .ForMember(a => a.Value, b => b.MapFrom(s => s.Genre));
+
+        CreateMap<Country, CountryDto>()
+            .ForMember(a => a.Country, b => b.MapFrom(s => s.Value));
+        CreateMap<CountryDto, Country>()
+            .ForMember(a => a.Value, b => b.MapFrom(s => s.Country));
     }
 }

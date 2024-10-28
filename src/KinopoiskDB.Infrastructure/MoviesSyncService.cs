@@ -17,16 +17,14 @@ namespace KinopoiskDB.Infrastructure;
 public class MoviesSyncService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly KinopoiskService _kinopoiskService;
     private readonly ILogger<MoviesSyncService> _logger;
     private readonly CronExpression _cronExpression;
     private readonly IMapper _mapper;
     private TimeZoneInfo _timeZone;
 
-    public MoviesSyncService(IServiceProvider serviceProvider, KinopoiskService kinopoiskService, ILogger<MoviesSyncService> logger, IMapper mapper)
+    public MoviesSyncService(IServiceProvider serviceProvider, ILogger<MoviesSyncService> logger, IMapper mapper)
     {
         _serviceProvider = serviceProvider;
-        _kinopoiskService = kinopoiskService;
         _logger = logger;
         _mapper = mapper;
 
@@ -65,9 +63,10 @@ public class MoviesSyncService : BackgroundService
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var movies = await _kinopoiskService.SyncPremieresBackgrondAsync(currentYear, monthString, stoppingToken);
-
                 var dbContext = scope.ServiceProvider.GetRequiredService<KinopoiskDbContext>();
+                var kinopoiskService = scope.ServiceProvider.GetRequiredService<KinopoiskService>();
+
+                var movies = await kinopoiskService.SyncPremieresBackgrondAsync(currentYear, monthString, stoppingToken);
 
                 foreach (var movieDto in movies)
                 {

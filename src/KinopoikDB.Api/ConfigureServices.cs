@@ -1,15 +1,15 @@
 ﻿using KinopoiskDB.Application;
+using KinopoiskDB.Core.Enum;
 using KinopoiskDB.Dal.PostgreSQL;
 using KinopoiskDB.Dal.PostgreSQL.Repository;
 using KinopoiskDB.Infrastructure;
+using KinopoiskDB.Infrastructure.Settings;
 
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 using Npgsql;
-using KinopoiskDB.Infrastructure.Settings;
-using Microsoft.Extensions.Options;
 
 namespace KinopoikDB.Api;
 
@@ -18,14 +18,14 @@ public static class ConfigureServices
     public static void ConfigureService(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAutoMapper(typeof(MapperProfile));
+        services.AddScoped<IKinopoiskService, KinopoiskService>();
+        services.AddScoped<IMoviesRepository, MoviesRepository>();
         services.AddHttpClient<IKinopoiskService, KinopoiskService>((sp, client) =>
         {
             var settings = sp.GetRequiredService<IOptions<KinopoiskSettings>>().Value;
             client.BaseAddress = new Uri(settings.ApiUrl);
             client.DefaultRequestHeaders.Add("X-API-KEY", settings.ApiKey);
         });
-        services.AddScoped<IMoviesRepository, MoviesRepository>();
-        services.AddScoped<IKinopoiskService, KinopoiskService>();
         services.AddHostedService<MoviesSyncService>();
         services.AddControllers();
         services.AddRouting(options =>
@@ -48,5 +48,7 @@ public static class ConfigureServices
             options => options
             .UseNpgsql(dataSource)
             .UseCamelCaseNamingConvention());
+
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<Month>();
     }
 }

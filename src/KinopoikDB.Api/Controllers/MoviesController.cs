@@ -28,9 +28,18 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("premieres")]
-    public async Task<ActionResult<List<MovieDto>>> GetPremieresAsync([FromQuery] PremiereRequest premiereRequest, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(List<MovieDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetPremieresAsync([FromQuery] PremiereRequest premiereRequest, CancellationToken cancellationToken)
     {
         var premieres = await _kinopoiskService.GetPremieresAsync(premiereRequest, cancellationToken);
         return Ok(premieres);
+    }
+
+    [HttpPost("films")]
+    [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> AddFilmsAsync([FromQuery] PremiereRequest premiereRequest, CancellationToken cancellationToken)
+    {
+        var films = await _kinopoiskService.AddFilms(premiereRequest, cancellationToken);
+        return Ok(films);
     }
 }
