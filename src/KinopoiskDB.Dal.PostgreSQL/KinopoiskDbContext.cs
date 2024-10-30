@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-using KinopoiskDB.Core.Enum;
 using KinopoiskDB.Core.Models;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -21,14 +21,5 @@ public class KinopoiskDbContext : DbContext
         var ctxTransaction = await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
         var transaction = ctxTransaction.GetDbTransaction();
         return transaction;
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.HasPostgresEnum<Month>()
-            .Entity<Movie>(entity =>
-            {
-                entity.Property(e => e.Month).HasColumnType("month");
-            });
     }
 }

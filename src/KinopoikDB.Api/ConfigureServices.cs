@@ -1,5 +1,4 @@
 ﻿using KinopoiskDB.Application;
-using KinopoiskDB.Core.Enum;
 using KinopoiskDB.Dal.PostgreSQL;
 using KinopoiskDB.Dal.PostgreSQL.Repository;
 using KinopoiskDB.Infrastructure;
@@ -48,7 +47,5 @@ public static class ConfigureServices
             options => options
             .UseNpgsql(dataSource)
             .UseCamelCaseNamingConvention());
-
-        NpgsqlConnection.GlobalTypeMapper.MapEnum<Month>();
     }
 }

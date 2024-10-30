@@ -19,11 +19,19 @@ public class MoviesController : ControllerBase
         _kinopoiskService = kinopoiskService;
     }
 
-    [HttpGet("search")]
+    [HttpGet("search-by-name")]
     [ProducesResponseType(typeof(List<MovieDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> SearchMoviesAsync([FromQuery] string title, [FromQuery] int? year, CancellationToken cancellationToken)
+    public async Task<IActionResult> SearchMoviesByNameAsync([FromQuery] string title, CancellationToken cancellationToken)
     {
-        var movies = await _kinopoiskService.SearchMoviesAsync(default!, default, cancellationToken);
+        var movies = await _kinopoiskService.SearchMoviesByNameAsync(title, cancellationToken);
+        return Ok(movies);
+    }
+
+    [HttpGet("search-by-filter")]
+    [ProducesResponseType(typeof(List<MovieDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetMoviesByFilterAsync([FromQuery]MovieRequest movieRequest, CancellationToken cancellationToken)
+    {
+        var movies = await _kinopoiskService.GetMoviesByFilterAsync(movieRequest, cancellationToken);
         return Ok(movies);
     }
 

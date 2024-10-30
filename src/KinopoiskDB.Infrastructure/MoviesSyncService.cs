@@ -51,7 +51,7 @@ public class MoviesSyncService : BackgroundService
 
     private async Task SyncMoviesAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Ыtart synchronization");
+        _logger.LogInformation("Start synchronization");
 
         var currentYear = DateTime.UtcNow.Year;
         var currentMonth = DateTime.UtcNow.Month;

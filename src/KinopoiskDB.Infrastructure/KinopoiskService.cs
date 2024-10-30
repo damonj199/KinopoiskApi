@@ -38,6 +38,14 @@ public class KinopoiskService : IKinopoiskService
         return premiere ?? [];
     }
 
+    public async Task<IReadOnlyList<MovieDto>> GetMoviesByFilterAsync(MovieRequest movieRequest, CancellationToken cancellationToken)
+    {
+        var movies = await _moviesRepository.GetMoviesByFilterAsync(movieRequest, cancellationToken);
+        var result = _mapper.Map<List<MovieDto>>(movies);
+
+        return result;
+    }
+
     public async Task<int> AddFilms(PremiereRequest premiereRequest, CancellationToken cancellationToken)
     {
         var year = premiereRequest.Year;
@@ -48,22 +56,28 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var result = await SyncMovieDataAsync(jsonResponse);
+        var result = await SyncMovieDataAsync(jsonResponse, cancellationToken);
         var kinopoiskId = result.Count();
 
         return kinopoiskId;
     }
 
-    public async Task<IReadOnlyList<MovieDto>> SearchMoviesAsync(string title, int? year, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<MovieDto>> SearchMoviesByNameAsync(string title, CancellationToken cancellationToken)
     {
-        var request = string.Format(_settings.FilmsEndpoint, title, year);
-        var response = await _httpClient.GetAsync(request, cancellationToken);
+        
+        var moviesByName = await _moviesRepository.SearchMoviesByNameAsync(title, cancellationToken);
+        var result = _mapper.Map<IReadOnlyList<MovieDto>>(moviesByName);
 
-        response.EnsureSuccessStatusCode();
-        //var jsonResponse = await response.Content.ReadFromJsonAsync<MovieDto[]>(cancellationToken);
+        if(result.Count == 0)
+        {
+            var request = string.Format(_settings.FilmsEndpoint, title, cancellationToken);
+            var response = await _httpClient.GetAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
 
-        var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-        var result = await SyncMovieDataAsync(jsonResponse);
+            var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+            var res = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+            result = res;
+        }
 
         return result ?? [];
     }
@@ -79,18 +93,18 @@ public class KinopoiskService : IKinopoiskService
         return jsonResponse ?? [];
     }
 
-    public async Task<IReadOnlyList<MovieDto>> SyncMovieDataAsync(string jsonResponse)
+    public async Task<IReadOnlyList<MovieDto>> SyncMovieDataAsync(string jsonResponse, CancellationToken cancellationToken)
     {
         var moviesPageDto = JsonSerializer.Deserialize<MoviesPageDto>(jsonResponse, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
 
-        List<MovieDto> moviesDto = moviesPageDto?.Items ?? new List<MovieDto>();
+        var moviesDto = moviesPageDto?.Items ?? new List<MovieDto>();
 
-        List<Movie> movies = _mapper.Map<List<Movie>>(moviesDto);
+        var movies = _mapper.Map<List<Movie>>(moviesDto);
 
-        var films = await _moviesRepository.AddMoviesAsync(movies);
+        var films = await _moviesRepository.AddMoviesAsync(movies, cancellationToken);
 
         return _mapper.Map<List<MovieDto>>(films);
     }
