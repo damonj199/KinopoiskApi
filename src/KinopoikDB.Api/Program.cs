@@ -11,6 +11,7 @@ if (isDev)
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+builder.Configuration.AddEnvironmentVariables();
 builder.Host.UseDefaultServiceProvider(options =>
 {
     options.ValidateScopes = isDev;
