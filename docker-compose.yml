@@ -4,8 +4,11 @@ services:
     build:
       context: .
       dockerfile: src/KinopoikDB.Api/Dockerfile
-    environment: 
+    environment:
+        ASPNETCORE_ENVIRONMENT: Docker
         ConnectionStrings__DefaultConnection: ${POSTGRES_CONNECTION}
+        ConnectionStrings__Redis: ${REDIS_CONNECTION}
+        KinopoiskSettings__ApiKey: ${APIKEY}
     depends_on: 
       - postgres
       - redis
