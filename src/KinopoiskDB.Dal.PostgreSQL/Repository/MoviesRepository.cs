@@ -38,25 +38,14 @@ public class MoviesRepository : BaseRepository, IMoviesRepository
         return await query.ToListAsync();
     }
 
-    public async Task<List<Movie>> GetPremieresAsync(int year, Month month, CancellationToken cancellationToken)
+    public async Task<List<Movie>> GetPremieresAsync(DateOnly premiereRuStart, DateOnly premiereRuEnd, CancellationToken cancellationToken)
     {
         var primieres = await _cxt.Movies
             .AsNoTracking()
-            .Where(m => m.Year == year)
-            .Select(m => new Movie
-            {
-                Id = m.Id,
-                KinopoiskId = m.KinopoiskId,
-                NameRu = m.NameRu,
-                NameEn = m.NameEn,
-                NameOriginal = m.NameOriginal,
-                Year = m.Year,
-                PosterUrl = m.PosterUrl,
-                Description = m.Description,
-                PremiereRu = m.PremiereRu,
-                Countries = m.Countries,
-                Genres = m.Genres,
-            }).ToListAsync(cancellationToken);
+            .Where(m => m.PremiereRu >= premiereRuStart && m.PremiereRu <= premiereRuEnd)
+            .Include(g => g.Genres)
+            .Include(c => c.Countries)
+            .ToListAsync(cancellationToken);
 
         return primieres;
     }

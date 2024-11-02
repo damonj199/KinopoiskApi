@@ -10,7 +10,7 @@ public class Movie
     public int? Year { get; set; }
     public string? PosterUrl { get; set; }
     public string? Description { get; set; }
-    public DateTime? PremiereRu { get; set; }
+    public DateOnly? PremiereRu { get; set; }
     public ICollection<Country> Countries { get; set; } = [];
     public ICollection<Genre> Genres { get; set; } = [];
 }

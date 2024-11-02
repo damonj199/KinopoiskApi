@@ -39,6 +39,7 @@ public static class ConfigureServices
         });
         services.Configure<KinopoiskSettings>(configuration.GetRequiredSection(nameof(KinopoiskSettings)));
 
+        var connectionRedis = configuration["ConnectionStrings: Redis"];
         var connectionString = configuration["ConnectionStrings:DefaultConnection"];
         var dataSourceBuilder = new NpgsqlConnectionStringBuilder(connectionString);
         var dataSource = dataSourceBuilder.ConnectionString;
@@ -47,5 +48,10 @@ public static class ConfigureServices
             options => options
             .UseNpgsql(dataSource)
             .UseCamelCaseNamingConvention());
+
+        services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.Configuration = connectionRedis;
+        });
     }
 }
