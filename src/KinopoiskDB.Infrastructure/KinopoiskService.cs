@@ -37,7 +37,7 @@ public class KinopoiskService : IKinopoiskService
 
         var premiereRuStart = new DateOnly(premiereRequest.Year, (int)premiereRequest.Month, 1);
         var premiereRuEnd = premiereRuStart.AddMonths(1).AddDays(-1);
-        
+
         var cachedMovies = await _cache.GetStringAsync(cacheKey);
 
         if (cachedMovies != null)
@@ -55,10 +55,14 @@ public class KinopoiskService : IKinopoiskService
 
     public async Task<IReadOnlyList<MovieDto>> GetMoviesByFilterAsync(MovieRequest movieRequest, CancellationToken cancellationToken)
     {
-        var cacheKey = $"byFilter_{movieRequest.Genres}.{movieRequest.Countries}";
+        var genres = String.Join(",", movieRequest.Genres);
+        var countries = String.Join(",", movieRequest.Countries);
+
+        var cacheKey = $"byFilter_{genres}.{countries}";
+
         var cachedMovies = await _cache.GetStringAsync(cacheKey, cancellationToken);
 
-        if (cachedMovies != null)
+        if (cachedMovies != null && cachedMovies.Length > 2)
         {
             return JsonSerializer.Deserialize<List<MovieDto>>(cachedMovies);
         }
@@ -100,20 +104,27 @@ public class KinopoiskService : IKinopoiskService
         var moviesByName = await _moviesRepository.SearchMoviesByNameAsync(title, cancellationToken);
         var result = _mapper.Map<List<MovieDto>>(moviesByName);
 
-        if(result.Count == 0)
+        if (result.Count == 0)
         {
-            var request = string.Format(_settings.FilmsEndpoint, title, cancellationToken);
-            var response = await _httpClient.GetAsync(request, cancellationToken);
-            response.EnsureSuccessStatusCode();
-
-            var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-            var res = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+            var res = await SearchMoviesByNameKinopoisApi(title, cancellationToken);
             result = res;
         }
 
         await SaveCachedAsync(result, cacheKey, cancellationToken);
 
         return result ?? [];
+    }
+
+    public async Task<List<MovieDto>> SearchMoviesByNameKinopoisApi(string title, CancellationToken cancellationToken)
+    {
+        var request = string.Format(_settings.FilmsEndpoint, title, cancellationToken);
+        var response = await _httpClient.GetAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+        var res = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+
+        return res;
     }
 
     public async Task<IReadOnlyList<MovieDto>> SyncPremieresBackgrondAsync(int year, string? month, CancellationToken cancellationToken)
