@@ -4,7 +4,8 @@ using AutoMapper;
 
 using Cronos;
 
-using KinopoiskDB.Core.Models;
+using KinopoiskDB.Application;
+using KinopoiskDB.Core.Enum;
 using KinopoiskDB.Dal.PostgreSQL;
 
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ public class MoviesSyncService : BackgroundService
                 {
                     await Task.Delay(delay, stoppingToken);
                 }
-
+                //await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                 await SyncMoviesAsync(stoppingToken);
             }
         }
@@ -53,35 +54,35 @@ public class MoviesSyncService : BackgroundService
     {
         _logger.LogInformation("Start synchronization");
 
-        var currentYear = DateTime.UtcNow.Year;
-        var currentMonth = DateTime.UtcNow.Month;
-        var monthString = currentMonth.ToString("MMMM", CultureInfo.InvariantCulture);
+        CultureInfo.CurrentCulture = new CultureInfo("en-US");
 
-        _logger.LogInformation($"Получили год {currentYear} и месяц {currentMonth} - {monthString} для обновления");
+        var currentYear = DateTime.Now.Year;
+        var currentMonth = (Month)DateTime.Now.Month;
+
+        _logger.LogInformation($"Получили год {currentYear}, и месяц {currentMonth}, для обновления");
 
         try
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<KinopoiskDbContext>();
-                var kinopoiskService = scope.ServiceProvider.GetRequiredService<KinopoiskService>();
+                var kinopoiskService = scope.ServiceProvider.GetRequiredService<IKinopoiskService>();
 
-                var movies = await kinopoiskService.SyncPremieresBackgrondAsync(currentYear, monthString, stoppingToken);
+                var movies = await kinopoiskService.SyncPremieresBackgrondAsync(currentYear, currentMonth.ToString(), stoppingToken);
 
                 foreach (var movieDto in movies)
                 {
                     _logger.LogInformation("проверяем есть ли такой фильм в БД, если есть отменяем добавление");
                     var exisitgMovie = await dbContext.Movies.FirstOrDefaultAsync(m => m.KinopoiskId == movieDto.KinopoiskId, stoppingToken);
 
-                    _logger.LogInformation("Если фильма нет, добавляем его в БД");
                     if (exisitgMovie == null)
                     {
-                        var movie = _mapper.Map<Movie>(movieDto);
-
-                        dbContext.Movies.Add(movie);
+                        _logger.LogInformation("Фильма в БД нет, добавляем его");
+                        dbContext.Movies.Add(movieDto);
                     }
                     else
                     {
+                        _logger.LogInformation("Фильм уже у нас есть, обновляем данные по нему");
                         dbContext.Movies.Update(exisitgMovie);
                     }
                 }

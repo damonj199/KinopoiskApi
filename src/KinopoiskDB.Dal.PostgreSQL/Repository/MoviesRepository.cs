@@ -1,5 +1,4 @@
 ﻿using KinopoiskDB.Application;
-using KinopoiskDB.Core.Enum;
 using KinopoiskDB.Core.Models;
 
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,7 @@ public class MoviesRepository : BaseRepository, IMoviesRepository
 {
     public MoviesRepository(KinopoiskDbContext connectionString) : base(connectionString) { }
 
-    public async Task<List<Movie>> AddMoviesAsync(List<Movie> movies, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Movie>> AddMoviesAsync(IReadOnlyList<Movie> movies, CancellationToken cancellationToken)
     {
         foreach (var movie in movies)
         {
@@ -24,21 +23,20 @@ public class MoviesRepository : BaseRepository, IMoviesRepository
         return movies;
     }
 
-    public async Task<IReadOnlyList<Movie>> GetMoviesByFilterAsync(MovieRequest mReq, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Movie>> GetMoviesByFilterAsync(string genres, string countries, CancellationToken cancellationToken)
     {
-        var query = from m in _cxt.Movies.Include(g => g.Genres).Include(c => c.Countries)
-                    select m;
+        var query = _cxt.Movies.Include(g => g.Genres).Include(c => c.Countries).AsQueryable();
 
-        if (mReq.Genres != null && mReq.Genres.Any())
-            query = query.Where(m => m.Genres.All(g => mReq.Genres.Contains(g.Value)));
+        if (!string.IsNullOrWhiteSpace(genres))
+            query = query.Where(m => m.Genres.Any() && m.Genres.Any(g => genres.Contains(g.Value)));
 
-        if (mReq.Countries != null && mReq.Countries.Any())
-            query = query.Where(m => m.Countries.All(c => mReq.Countries.Contains(c.Value)));
+        if (!string.IsNullOrWhiteSpace(countries))
+            query = query.Where(m => m.Countries.Any() && m.Countries.Any(c => countries.Contains(c.Value)));
 
         return await query.ToListAsync();
     }
 
-    public async Task<List<Movie>> GetPremieresAsync(DateOnly premiereRuStart, DateOnly premiereRuEnd, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Movie>> GetPremieresForMonthAsync(DateOnly premiereRuStart, DateOnly premiereRuEnd, CancellationToken cancellationToken)
     {
         var primieres = await _cxt.Movies
             .AsNoTracking()
@@ -50,7 +48,7 @@ public class MoviesRepository : BaseRepository, IMoviesRepository
         return primieres;
     }
 
-    public async Task<List<Movie>> SearchMoviesByNameAsync(string title, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Movie>> SearchMoviesByNameAsync(string title, CancellationToken cancellationToken)
     {
         var moviesByName = await _cxt.Movies
             .AsNoTracking()

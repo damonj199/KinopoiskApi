@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Npgsql;
-
 namespace KinopoikDB.Api;
 
 public static class ConfigureServices
@@ -38,17 +36,10 @@ public static class ConfigureServices
             options.LoggingFields = HttpLoggingFields.Request;
         });
         services.Configure<KinopoiskSettings>(configuration.GetRequiredSection(nameof(KinopoiskSettings)));
-
-        //var connectionRedis = configuration["ConnectionStrings:Redis"];
-        //var connectionString = configuration["ConnectionStrings:DefaultConnection"];
-        //var dataSourceBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-        //var dataSource = dataSourceBuilder.ConnectionString;
-
         services.AddDbContext<KinopoiskDbContext>(
             options => options
             .UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
             .UseCamelCaseNamingConvention());
-
         services.AddStackExchangeRedisCache(opt =>
         {
             opt.Configuration = configuration.GetConnectionString("Redis");

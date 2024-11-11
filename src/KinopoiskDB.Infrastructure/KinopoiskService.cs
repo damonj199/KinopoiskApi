@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using AutoMapper;
 
@@ -31,22 +30,22 @@ public class KinopoiskService : IKinopoiskService
         _cache = distributedCache;
     }
 
-    public async Task<IReadOnlyList<MovieDto>> GetPremieresAsync(PremiereRequest premiereRequest, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<MovieDto>> GetPremieresForMonthAsync(PremiereRequest premiereRequest, CancellationToken cancellationToken)
     {
-        var cacheKey = $"movies_{premiereRequest.Year}.{(int)premiereRequest.Month}";
+        var cacheKey = $"premieres_{premiereRequest.Year}.{(int)premiereRequest.Month}";
 
         var premiereRuStart = new DateOnly(premiereRequest.Year, (int)premiereRequest.Month, 1);
         var premiereRuEnd = premiereRuStart.AddMonths(1).AddDays(-1);
 
         var cachedMovies = await _cache.GetStringAsync(cacheKey);
 
-        if (cachedMovies != null)
+        if (cachedMovies != null && cachedMovies.Length > 2)
         {
-            return JsonSerializer.Deserialize<List<MovieDto>>(cachedMovies);
+            return JsonSerializer.Deserialize<IReadOnlyList<MovieDto>>(cachedMovies);
         }
 
-        var movies = await _moviesRepository.GetPremieresAsync(premiereRuStart, premiereRuEnd, cancellationToken);
-        var premiere = _mapper.Map<List<MovieDto>>(movies);
+        var movies = await _moviesRepository.GetPremieresForMonthAsync(premiereRuStart, premiereRuEnd, cancellationToken);
+        var premiere = _mapper.Map<IReadOnlyList<MovieDto>>(movies);
 
         await SaveCachedAsync(premiere, cacheKey, cancellationToken);
 
@@ -64,11 +63,11 @@ public class KinopoiskService : IKinopoiskService
 
         if (cachedMovies != null && cachedMovies.Length > 2)
         {
-            return JsonSerializer.Deserialize<List<MovieDto>>(cachedMovies);
+            return JsonSerializer.Deserialize<IReadOnlyList<MovieDto>>(cachedMovies);
         }
 
-        var movies = await _moviesRepository.GetMoviesByFilterAsync(movieRequest, cancellationToken);
-        var result = _mapper.Map<List<MovieDto>>(movies);
+        var movies = await _moviesRepository.GetMoviesByFilterAsync(genres, countries, cancellationToken);
+        var result = _mapper.Map<IReadOnlyList<MovieDto>>(movies);
 
         await SaveCachedAsync(result, cacheKey, cancellationToken);
 
@@ -96,13 +95,13 @@ public class KinopoiskService : IKinopoiskService
         var cacheKey = $"Movies_{title}";
 
         var cachedMovies = await _cache.GetStringAsync(cacheKey, cancellationToken);
-        if (cachedMovies != null)
+        if (cachedMovies != null && cachedMovies.Length > 2)
         {
-            return JsonSerializer.Deserialize<List<MovieDto>>(cachedMovies);
+            return JsonSerializer.Deserialize<IReadOnlyList<MovieDto>>(cachedMovies);
         }
 
         var moviesByName = await _moviesRepository.SearchMoviesByNameAsync(title, cancellationToken);
-        var result = _mapper.Map<List<MovieDto>>(moviesByName);
+        var result = _mapper.Map<IReadOnlyList<MovieDto>>(moviesByName);
 
         if (result.Count == 0)
         {
@@ -115,30 +114,32 @@ public class KinopoiskService : IKinopoiskService
         return result ?? [];
     }
 
-    public async Task<List<MovieDto>> SearchMoviesByNameKinopoisApi(string title, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<MovieDto>> SearchMoviesByNameKinopoisApi(string title, CancellationToken cancellationToken)
     {
         var request = string.Format(_settings.FilmsEndpoint, title, cancellationToken);
         var response = await _httpClient.GetAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-        var res = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var listMovies = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var result = await _moviesRepository.AddMoviesAsync(listMovies, cancellationToken);
 
-        return res;
+        return _mapper.Map<IReadOnlyList<MovieDto>>(result) ?? [];
     }
 
-    public async Task<IReadOnlyList<MovieDto>> SyncPremieresBackgrondAsync(int year, string? month, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Movie>> SyncPremieresBackgrondAsync(int year, string? month, CancellationToken cancellationToken)
     {
         var request = string.Format(_settings.PremieresEndpoint, year, month);
         var response = await _httpClient.GetAsync(request, cancellationToken);
-
         response.EnsureSuccessStatusCode();
-        var jsonResponse = await response.Content.ReadFromJsonAsync<MovieDto[]>(cancellationToken);
 
-        return jsonResponse ?? [];
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var listMovies = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+
+        return listMovies;
     }
 
-    public async Task<List<MovieDto>> SyncMovieDataAsync(string jsonResponse, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Movie>> SyncMovieDataAsync(string jsonResponse, CancellationToken cancellationToken)
     {
         var moviesPageDto = JsonSerializer.Deserialize<MoviesPageDto>(jsonResponse, new JsonSerializerOptions
         {
@@ -147,14 +148,12 @@ public class KinopoiskService : IKinopoiskService
 
         var moviesDto = moviesPageDto?.Items ?? new List<MovieDto>();
 
-        var movies = _mapper.Map<List<Movie>>(moviesDto);
+        var movies = _mapper.Map<IReadOnlyList<Movie>>(moviesDto);
 
-        var films = await _moviesRepository.AddMoviesAsync(movies, cancellationToken);
-
-        return _mapper.Map<List<MovieDto>>(films);
+        return movies;
     }
 
-    public async Task SaveCachedAsync(List<MovieDto> cacheMovies, string cacheKey, CancellationToken cancellationToken)
+    public async Task SaveCachedAsync(IReadOnlyList<MovieDto> cacheMovies, string cacheKey, CancellationToken cancellationToken)
     {
         var cacheOptions = new DistributedCacheEntryOptions
         {

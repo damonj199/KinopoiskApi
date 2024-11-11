@@ -1,12 +1,11 @@
-﻿using KinopoiskDB.Core.Enum;
-using KinopoiskDB.Core.Models;
+﻿using KinopoiskDB.Core.Models;
 
 namespace KinopoiskDB.Application;
 
 public interface IMoviesRepository
 {
-    Task<List<Movie>> AddMoviesAsync(List<Movie> movies, CancellationToken cancellationToken);
-    Task<IReadOnlyList<Movie>> GetMoviesByFilterAsync(MovieRequest mReq, CancellationToken cancellationToken);
-    Task<List<Movie>> GetPremieresAsync(DateOnly premiereRuStart, DateOnly premiereRuEnad, CancellationToken cancellationToken);
-    Task<List<Movie>> SearchMoviesByNameAsync(string title, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Movie>> AddMoviesAsync(IReadOnlyList<Movie> movies, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Movie>> GetMoviesByFilterAsync(string genres, string countries, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Movie>> GetPremieresForMonthAsync(DateOnly premiereRuStart, DateOnly premiereRuEnad, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Movie>> SearchMoviesByNameAsync(string title, CancellationToken cancellationToken);
 }

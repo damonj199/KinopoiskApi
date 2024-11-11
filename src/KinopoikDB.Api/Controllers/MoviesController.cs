@@ -37,9 +37,9 @@ public class MoviesController : ControllerBase
 
     [HttpGet("premieres")]
     [ProducesResponseType(typeof(List<MovieDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetPremieresAsync([FromQuery] PremiereRequest premiereRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPremieresForMonthAsync([FromQuery] PremiereRequest premiereRequest, CancellationToken cancellationToken)
     {
-        var premieres = await _kinopoiskService.GetPremieresAsync(premiereRequest, cancellationToken);
+        var premieres = await _kinopoiskService.GetPremieresForMonthAsync(premiereRequest, cancellationToken);
         return Ok(premieres);
     }
 
