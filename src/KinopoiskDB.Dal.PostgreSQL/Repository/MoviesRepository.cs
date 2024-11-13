@@ -59,4 +59,32 @@ public class MoviesRepository : BaseRepository, IMoviesRepository
 
         return moviesByName;
     }
+
+    public async Task<IReadOnlyList<Movie>> GetAllMoviesAsync(int page, int pageSize, CancellationToken cancellationToken)
+    {
+        var allMovies = await _cxt.Movies
+            .AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(g => g.Genres)
+            .Include(c => c.Countries)
+            .ToListAsync(cancellationToken);
+
+        return allMovies;
+    }
+
+    public async Task RemovePreviousMonthPremieresAsync()
+    {
+        var now = DateOnly.FromDateTime(DateTime.Now);
+        var startOfCurrentMonth = new DateOnly(now.Year, now.Month, 1);
+        var startOfPreviousMonth = startOfCurrentMonth.AddMonths(-1);
+        var endOfPreviousMonth = startOfCurrentMonth.AddDays(-1);
+
+        var oldPremieres = _cxt.Movies
+            .Where(p => p.PremiereRu >= startOfPreviousMonth && p.PremiereRu <= endOfPreviousMonth)
+            .ToList();
+
+        _cxt.Movies.RemoveRange(oldPremieres);
+        await _cxt.SaveChangesAsync();
+    }
 }

@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-
-using AutoMapper;
-
-using Cronos;
+﻿using Cronos;
 
 using KinopoiskDB.Application;
 using KinopoiskDB.Core.Enum;
@@ -20,14 +16,12 @@ public class MoviesSyncService : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<MoviesSyncService> _logger;
     private readonly CronExpression _cronExpression;
-    private readonly IMapper _mapper;
-    private TimeZoneInfo _timeZone;
+    private readonly TimeZoneInfo _timeZone;
 
-    public MoviesSyncService(IServiceProvider serviceProvider, ILogger<MoviesSyncService> logger, IMapper mapper)
+    public MoviesSyncService(IServiceProvider serviceProvider, ILogger<MoviesSyncService> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
-        _mapper = mapper;
 
         _cronExpression = CronExpression.Parse("0 0 1 * *");
         _timeZone = TimeZoneInfo.Local;
@@ -45,6 +39,7 @@ public class MoviesSyncService : BackgroundService
                     await Task.Delay(delay, stoppingToken);
                 }
                 //await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await RemovePreviousMonthPremieresAsync(stoppingToken);
                 await SyncMoviesAsync(stoppingToken);
             }
         }
@@ -53,8 +48,6 @@ public class MoviesSyncService : BackgroundService
     private async Task SyncMoviesAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Start synchronization");
-
-        CultureInfo.CurrentCulture = new CultureInfo("en-US");
 
         var currentYear = DateTime.Now.Year;
         var currentMonth = (Month)DateTime.Now.Month;
@@ -93,6 +86,26 @@ public class MoviesSyncService : BackgroundService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Синхронизация завершилась ошибкой");
+        }
+    }
+
+    private async Task RemovePreviousMonthPremieresAsync(CancellationToken stoppingToken)
+    {
+        var now = DateOnly.FromDateTime(DateTime.Now);
+        var startOfCurrentMonth = new DateOnly(now.Year, now.Month, 1);
+        var startOfPreviousMonth = startOfCurrentMonth.AddMonths(-1);
+        var endOfPreviousMonth = startOfCurrentMonth.AddDays(-1);
+
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<KinopoiskDbContext>();
+            
+            var oldPremieres = dbContext.Movies
+                .Where(p => p.PremiereRu >= startOfPreviousMonth && p.PremiereRu <= endOfPreviousMonth)
+                .ToList();
+
+            dbContext.Movies.RemoveRange(oldPremieres);
+            await dbContext.SaveChangesAsync(stoppingToken);
         }
     }
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KinopoikDB.Api</name>
+    </assembly>
+    <members>
+        <member name="M:KinopoikDB.Api.Controllers.MoviesController.SearchMoviesByNameAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Поиск Фильмов по названию
+            </summary>
+            <remarks>В этом эндпоинте можно получить списов фильмов по названию</remarks>
+            <param name="title"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+            <response code="200">Успешное выполнение</response>
+        </member>
+        <member name="M:KinopoikDB.Api.Controllers.MoviesController.GetMoviesByFilterAsync(KinopoiskDB.Application.Models.MovieRequest,System.Threading.CancellationToken)">
+            <summary>
+            Фильтрация фильмов по жарнам и странам
+            </summary>
+            <remarks>Данный эндпоинт отфильтрует фильмы по выбранным жанрам и странам</remarks>
+            <param name="movieRequest"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KinopoikDB.Api.Controllers.MoviesController.GetPremieresForMonthAsync(KinopoiskDB.Application.Models.PremiereRequest,System.Threading.CancellationToken)">
+            <summary>
+            Поиск премьер за определенный месяц
+            </summary>
+            <remarks>Здесь можно получить фильмов вышедших в выбраный месяц и год</remarks>
+            <param name="premiereRequest">Указать год и месяц</param>
+            <param name="cancellationToken"></param>
+            <returns>Список премьер за выбранный месяц выбранного года</returns>
+        </member>
+        <member name="M:KinopoikDB.Api.Controllers.MoviesController.AddFilmsAsync(KinopoiskDB.Application.Models.PremiereRequest,System.Threading.CancellationToken)">
+            <summary>
+            Тестовая ручка на добавление фильмов
+            </summary>
+            <param name="premiereRequest"></param>
+            <param name="cancellationToken"></param>
+            <returns>количество добавленных фильмов в БД</returns>
+        </member>
+        <member name="M:KinopoikDB.Api.Controllers.MoviesController.Delete">
+            <summary>
+            Тустовое удаление премьер за прошлый месяц
+            </summary>
+             <remarks>Работает автоматически, будет удаление с 1 числа по конец месяца</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:KinopoikDB.Api.Controllers.MoviesController.GetAllMoviesAsync(KinopoiskDB.Application.Dtos.PagedResponse{KinopoiskDB.Application.Dtos.MovieDto},System.Threading.CancellationToken)">
+            <summary>
+            Здесь можно посмотреть все фильм которые есть постранично!
+            </summary>
+             <remarks>Нужно указать номер страницы и количество фильмов на странице</remarks>
+            <param name="pagedResponse"></param>
+            <param name="cancellationToken"></param>
+            <returns>Пагинированный список</returns>
+        </member>
+    </members>
+</doc>

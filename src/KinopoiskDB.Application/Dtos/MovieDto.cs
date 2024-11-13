@@ -1,18 +1,16 @@
-﻿using KinopoiskDB.Core.Enum;
+﻿namespace KinopoiskDB.Application.Dtos;
 
-namespace KinopoiskDB.Application.Dtos;
-
-public class MovieDto
+public record MovieDto
 {
-    public Guid Id { get; set; }
-    public long KinopoiskId { get; set; }
-    public string? NameRu { get; set; }
-    public string? NameEn { get; set; }
-    public string? NameOriginal { get; set; }
-    public int? Year { get; set; }
-    public string? PosterUrl { get; set; }
-    public string? Description { get; set; }
-    public DateOnly? PremiereRu { get; set; }
-    public CountryDto[] Countries { get; set; } = [];
-    public GenreDto[] Genres { get; set; } = [];
+    public Guid Id { get; init; }
+    public long KinopoiskId { get; init; }
+    public string? NameRu { get; init; }
+    public string? NameEn { get; init; }
+    public string? NameOriginal { get; init; }
+    public int? Year { get; init; }
+    public string? PosterUrl { get; init; }
+    public string? Description { get; init; }
+    public DateOnly? PremiereRu { get; init; }
+    public CountryDto[] Countries { get; init; } = [];
+    public GenreDto[] Genres { get; init; } = [];
 }

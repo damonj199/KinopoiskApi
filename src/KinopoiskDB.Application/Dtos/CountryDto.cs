@@ -1,6 +1,9 @@
 ﻿namespace KinopoiskDB.Application.Dtos;
 
-public class CountryDto
+public record CountryDto
 {
-    public string Country { get; set; } = default!;
+    /// <summary>
+    /// Cтраны которые снимали фильм
+    /// </summary>
+    public string Country { get; init; } = default!;
 }

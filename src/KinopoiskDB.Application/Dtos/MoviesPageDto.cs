@@ -1,9 +1,9 @@
 ﻿namespace KinopoiskDB.Application.Dtos;
 
-public record class MoviesPageDto
+public record MoviesPageDto
 {
-    public int Total { get; set; }
-    public int TotalPages { get; set; }
-    public int Page { get; set; }
-    public List<MovieDto> Items { get; set; } = [];
+    public int Total { get; init; }
+    public int TotalPages { get; init; }
+    public int Page { get; init; }
+    public List<MovieDto> Items { get; init; } = [];
 }

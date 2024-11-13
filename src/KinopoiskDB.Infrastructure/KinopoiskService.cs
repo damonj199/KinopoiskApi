@@ -4,6 +4,7 @@ using AutoMapper;
 
 using KinopoiskDB.Application;
 using KinopoiskDB.Application.Dtos;
+using KinopoiskDB.Application.Models;
 using KinopoiskDB.Core.Models;
 using KinopoiskDB.Infrastructure.Settings;
 
@@ -15,17 +16,19 @@ namespace KinopoiskDB.Infrastructure;
 public class KinopoiskService : IKinopoiskService
 {
     private readonly IMoviesRepository _moviesRepository;
+    private readonly ISyncService _syncService;
     private readonly HttpClient _httpClient;
     private readonly IMapper _mapper;
     private readonly KinopoiskSettings _settings;
     private readonly IDistributedCache _cache;
 
     public KinopoiskService(HttpClient httpClient, IMoviesRepository moviesRepository, IMapper mapper,
-        IDistributedCache distributedCache, IOptions<KinopoiskSettings> settings)
+        IDistributedCache distributedCache, IOptions<KinopoiskSettings> settings, ISyncService syncService)
     {
         _httpClient = httpClient;
         _mapper = mapper;
         _moviesRepository = moviesRepository;
+        _syncService = syncService;
         _settings = settings.Value;
         _cache = distributedCache;
     }
@@ -84,9 +87,10 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var result = await SyncMovieDataAsync(jsonResponse, cancellationToken);
-        var kinopoiskId = result.Count();
+        var listMovies = await _syncService.SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var result = await _moviesRepository.AddMoviesAsync(listMovies, cancellationToken);
 
+        var kinopoiskId = result.Count();
         return kinopoiskId;
     }
 
@@ -121,7 +125,7 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-        var listMovies = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var listMovies = await _syncService.SyncMovieDataAsync(jsonResponse, cancellationToken);
         var result = await _moviesRepository.AddMoviesAsync(listMovies, cancellationToken);
 
         return _mapper.Map<IReadOnlyList<MovieDto>>(result) ?? [];
@@ -134,23 +138,9 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var listMovies = await SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var listMovies = await _syncService.SyncMovieDataAsync(jsonResponse, cancellationToken);
 
         return listMovies;
-    }
-
-    public async Task<IReadOnlyList<Movie>> SyncMovieDataAsync(string jsonResponse, CancellationToken cancellationToken)
-    {
-        var moviesPageDto = JsonSerializer.Deserialize<MoviesPageDto>(jsonResponse, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
-
-        var moviesDto = moviesPageDto?.Items ?? new List<MovieDto>();
-
-        var movies = _mapper.Map<IReadOnlyList<Movie>>(moviesDto);
-
-        return movies;
     }
 
     public async Task SaveCachedAsync(IReadOnlyList<MovieDto> cacheMovies, string cacheKey, CancellationToken cancellationToken)
@@ -161,5 +151,17 @@ public class KinopoiskService : IKinopoiskService
         };
 
         await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(cacheMovies), cacheOptions, cancellationToken);
+    }
+
+    public async Task Delete()
+    {
+        await _moviesRepository.RemovePreviousMonthPremieresAsync();
+    }
+
+    public async Task<IReadOnlyList<MovieDto>> GetAllMoviesAsync(PagedResponse<MovieDto> pageRes, CancellationToken cancellationToken)
+    {        
+        var result = await _moviesRepository.GetAllMoviesAsync(pageRes.Page, pageRes.PageSize, cancellationToken);
+
+        return _mapper.Map<IReadOnlyList<MovieDto>>(result) ?? [];
     }
 }

@@ -1,6 +1,9 @@
 ﻿namespace KinopoiskDB.Application.Dtos;
 
-public class GenreDto
+public record GenreDto
 {
-    public string Genre { get; set; } = default!;
+    /// <summary>
+    /// Жанры по которым можно фильтровать
+    /// </summary>
+    public string Genre { get; init; } = default!;
 }

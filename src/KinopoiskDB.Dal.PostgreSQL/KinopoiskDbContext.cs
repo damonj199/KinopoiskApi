@@ -5,7 +5,6 @@ using KinopoiskDB.Core.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KinopoiskDB.Dal.PostgreSQL;
 
@@ -24,20 +23,10 @@ public class KinopoiskDbContext : DbContext
         return transaction;
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            foreach (var property in entityType.GetProperties())
-            {
-                if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
-                {
-                    property.SetValueConverter(new ValueConverter<DateTime, DateTime>(
-                        v => v.ToUniversalTime(),
-                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
-                    ));
-                }
-            }
-        }
+        configurationBuilder
+            .Properties<DateTime>()
+            .HaveColumnType("datetimeoffset");
     }
 }
