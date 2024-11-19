@@ -40,18 +40,11 @@
             <param name="cancellationToken"></param>
             <returns>количество добавленных фильмов в БД</returns>
         </member>
-        <member name="M:KinopoikDB.Api.Controllers.MoviesController.Delete">
-            <summary>
-            Тустовое удаление премьер за прошлый месяц
-            </summary>
-             <remarks>Работает автоматически, будет удаление с 1 числа по конец месяца</remarks>
-            <returns></returns>
-        </member>
         <member name="M:KinopoikDB.Api.Controllers.MoviesController.GetAllMoviesAsync(KinopoiskDB.Application.Dtos.PagedResponse{KinopoiskDB.Application.Dtos.MovieDto},System.Threading.CancellationToken)">
             <summary>
             Здесь можно посмотреть все фильм которые есть постранично!
             </summary>
-             <remarks>Нужно указать номер страницы и количество фильмов на странице</remarks>
+             <remarks>Нужно указать Page - номер страницы и PageSize - количество фильмов на странице</remarks>
             <param name="pagedResponse"></param>
             <param name="cancellationToken"></param>
             <returns>Пагинированный список</returns>

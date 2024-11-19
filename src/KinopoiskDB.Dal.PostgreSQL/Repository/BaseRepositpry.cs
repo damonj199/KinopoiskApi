@@ -1,10 +1,11 @@
 ﻿namespace KinopoiskDB.Dal.PostgreSQL.Repository;
 
-public class BaseRepository
+public abstract class BaseRepository
 {
-    protected readonly KinopoiskDbContext _cxt;
+    protected readonly KinopoiskDbContext Context;
+
     public BaseRepository(KinopoiskDbContext connectionString)
     {
-        _cxt = connectionString;
+        Context = connectionString;
     }
 }

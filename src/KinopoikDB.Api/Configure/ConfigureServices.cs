@@ -1,4 +1,7 @@
-﻿using KinopoiskDB.Application;
+﻿using System.Net;
+using System.Reflection;
+
+using KinopoiskDB.Application;
 using KinopoiskDB.Dal.PostgreSQL;
 using KinopoiskDB.Dal.PostgreSQL.Repository;
 using KinopoiskDB.Infrastructure;
@@ -7,12 +10,10 @@ using KinopoiskDB.Infrastructure.Settings;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-
-using Polly.Extensions.Http;
-using Polly;
-using System.Net;
 using Microsoft.OpenApi.Models;
-using KinopoiskDB.Core.Enum;
+
+using Polly;
+using Polly.Extensions.Http;
 
 namespace KinopoikDB.Api.Configure;
 
@@ -22,7 +23,7 @@ public static class ConfigureServices
     {
         services.AddScoped<IKinopoiskService, KinopoiskService>();
         services.AddScoped<IMoviesRepository, MoviesRepository>();
-        services.AddScoped<ISyncService, SyncService>();
+        services.AddSingleton<ISyncService, SyncService>();
 
         services.AddAutoMapper(typeof(MapperProfile));
         services.AddHttpClient<IKinopoiskService, KinopoiskService>((sp, client) =>
@@ -40,18 +41,18 @@ public static class ConfigureServices
             options.LowercaseQueryStrings = true;
             options.LowercaseUrls = true;
         });
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo 
-            { 
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
                 Title = "My Kinopoisk API",
-                Description = "Здесь можно будет получать списки фильмов по названию, с фильтрацией по жанрам и странам, и премьеры за любой месяц",
-                Version = "v1" 
+                Description = "Здесь можно будет получать списки фильмов по названию, с фильтрацией по жанрам и странам, и премьеры за любой месяц"
             });
-
-            var filePath = Path.Combine(System.AppContext.BaseDirectory, "MyApiKinopoisk.xml");
-            c.IncludeXmlComments(filePath);
-
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
         });
         services.AddHttpLogging(options =>
         {

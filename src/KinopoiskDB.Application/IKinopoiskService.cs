@@ -11,6 +11,5 @@ public interface IKinopoiskService
     Task<IReadOnlyList<Movie>> SyncPremieresBackgrondAsync(int year, string? month, CancellationToken cancellationToken);
     Task<int> AddFilms(PremiereRequest premiereRequest, CancellationToken cancellationToken);
     Task<IReadOnlyList<MovieDto>> GetMoviesByFilterAsync(MovieRequest movieRequest, CancellationToken cancellationToken);
-    Task Delete();
-    Task<IReadOnlyList<MovieDto>> GetAllMoviesAsync(PagedResponse<MovieDto> pageRes, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MovieDto>> GetAllMoviesAsync(PagedRequest<MovieDto> pageRes, SortRequest<MovieDto> sortRequest, CancellationToken cancellationToken);
 }

@@ -1,26 +1,22 @@
 ﻿using Cronos;
 
 using KinopoiskDB.Application;
-using KinopoiskDB.Core.Enum;
-using KinopoiskDB.Dal.PostgreSQL;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace KinopoiskDB.Infrastructure;
 
-public class MoviesSyncService : BackgroundService
+public sealed partial class MoviesSyncService : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly ISyncService _syncService;
     private readonly ILogger<MoviesSyncService> _logger;
     private readonly CronExpression _cronExpression;
     private readonly TimeZoneInfo _timeZone;
 
-    public MoviesSyncService(IServiceProvider serviceProvider, ILogger<MoviesSyncService> logger)
+    public MoviesSyncService(ISyncService syncService, ILogger<MoviesSyncService> logger)
     {
-        _serviceProvider = serviceProvider;
+        _syncService = syncService;
         _logger = logger;
 
         _cronExpression = CronExpression.Parse("0 0 1 * *");
@@ -30,82 +26,30 @@ public class MoviesSyncService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var next = _cronExpression.GetNextOccurrence(DateTime.UtcNow, _timeZone);
-            if (next.HasValue)
+            try
             {
-                var delay = next.Value - DateTimeOffset.Now;
-                if (delay.TotalMilliseconds > 0)
+                var next = _cronExpression.GetNextOccurrence(DateTime.UtcNow, _timeZone);
+                if (next.HasValue)
                 {
-                    await Task.Delay(delay, stoppingToken);
+                    var delay = next.Value - DateTimeOffset.Now;
+                    if (delay.TotalMilliseconds > 0)
+                    {
+                        await Task.Delay(delay, stoppingToken);
+                    }
+
+                    await _syncService.SyncMoviesAsync(stoppingToken);
                 }
-                //await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
-                await RemovePreviousMonthPremieresAsync(stoppingToken);
-                await SyncMoviesAsync(stoppingToken);
+
+            }
+            catch (TaskCanceledException)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка в выполнении синхронизации фильмов");
             }
         }
-    }
-
-    private async Task SyncMoviesAsync(CancellationToken stoppingToken)
-    {
-        _logger.LogInformation("Start synchronization");
-
-        var currentYear = DateTime.Now.Year;
-        var currentMonth = (Month)DateTime.Now.Month;
-
-        _logger.LogInformation($"Получили год {currentYear}, и месяц {currentMonth}, для обновления");
-
-        try
-        {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<KinopoiskDbContext>();
-                var kinopoiskService = scope.ServiceProvider.GetRequiredService<IKinopoiskService>();
-
-                var movies = await kinopoiskService.SyncPremieresBackgrondAsync(currentYear, currentMonth.ToString(), stoppingToken);
-
-                foreach (var movieDto in movies)
-                {
-                    _logger.LogInformation("проверяем есть ли такой фильм в БД, если есть отменяем добавление");
-                    var exisitgMovie = await dbContext.Movies.FirstOrDefaultAsync(m => m.KinopoiskId == movieDto.KinopoiskId, stoppingToken);
-
-                    if (exisitgMovie == null)
-                    {
-                        _logger.LogInformation("Фильма в БД нет, добавляем его");
-                        dbContext.Movies.Add(movieDto);
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Фильм уже у нас есть, обновляем данные по нему");
-                        dbContext.Movies.Update(exisitgMovie);
-                    }
-                }
-                await dbContext.SaveChangesAsync(stoppingToken);
-            }
-            _logger.LogInformation("Кинопремьеры обнолены!");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Синхронизация завершилась ошибкой");
-        }
-    }
-
-    private async Task RemovePreviousMonthPremieresAsync(CancellationToken stoppingToken)
-    {
-        var now = DateOnly.FromDateTime(DateTime.Now);
-        var startOfCurrentMonth = new DateOnly(now.Year, now.Month, 1);
-        var startOfPreviousMonth = startOfCurrentMonth.AddMonths(-1);
-        var endOfPreviousMonth = startOfCurrentMonth.AddDays(-1);
-
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<KinopoiskDbContext>();
-            
-            var oldPremieres = dbContext.Movies
-                .Where(p => p.PremiereRu >= startOfPreviousMonth && p.PremiereRu <= endOfPreviousMonth)
-                .ToList();
-
-            dbContext.Movies.RemoveRange(oldPremieres);
-            await dbContext.SaveChangesAsync(stoppingToken);
-        }
+        _logger.LogInformation("Background service завершает работу.");
     }
 }

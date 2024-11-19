@@ -9,7 +9,7 @@
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>C:\Users\admin\Desktop\Kinopoisk2.0\src\KinopoikDB.Api\MyApiKinopoisk.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net8.0\KinopoikDB.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

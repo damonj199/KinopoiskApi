@@ -87,7 +87,7 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var listMovies = await _syncService.SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var listMovies = _syncService.SyncMovieData(jsonResponse, cancellationToken);
         var result = await _moviesRepository.AddMoviesAsync(listMovies, cancellationToken);
 
         var kinopoiskId = result.Count();
@@ -125,7 +125,7 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-        var listMovies = await _syncService.SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var listMovies = _syncService.SyncMovieData(jsonResponse, cancellationToken);
         var result = await _moviesRepository.AddMoviesAsync(listMovies, cancellationToken);
 
         return _mapper.Map<IReadOnlyList<MovieDto>>(result) ?? [];
@@ -138,7 +138,7 @@ public class KinopoiskService : IKinopoiskService
         response.EnsureSuccessStatusCode();
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var listMovies = await _syncService.SyncMovieDataAsync(jsonResponse, cancellationToken);
+        var listMovies = _syncService.SyncMovieData(jsonResponse, cancellationToken);
 
         return listMovies;
     }
@@ -153,14 +153,9 @@ public class KinopoiskService : IKinopoiskService
         await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(cacheMovies), cacheOptions, cancellationToken);
     }
 
-    public async Task Delete()
+    public async Task<IReadOnlyList<MovieDto>> GetAllMoviesAsync(PagedRequest<MovieDto> pageReq, SortRequest<MovieDto> sortReq, CancellationToken cancellationToken)
     {
-        await _moviesRepository.RemovePreviousMonthPremieresAsync();
-    }
-
-    public async Task<IReadOnlyList<MovieDto>> GetAllMoviesAsync(PagedResponse<MovieDto> pageRes, CancellationToken cancellationToken)
-    {        
-        var result = await _moviesRepository.GetAllMoviesAsync(pageRes.Page, pageRes.PageSize, cancellationToken);
+        var result = await _moviesRepository.GetAllMoviesAsync(pageReq.Page, pageReq.PageSize, sortReq.SortField, sortReq.SortOrder, cancellationToken);
 
         return _mapper.Map<IReadOnlyList<MovieDto>>(result) ?? [];
     }

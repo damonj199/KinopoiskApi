@@ -4,5 +4,6 @@ namespace KinopoiskDB.Application;
 
 public interface ISyncService
 {
-    Task<IReadOnlyList<Movie>> SyncMovieDataAsync(string jsonResponse, CancellationToken cancellationToken);
+    IReadOnlyList<Movie> SyncMovieData(string jsonResponse, CancellationToken cancellationToken);
+    Task SyncMoviesAsync(CancellationToken stoppingToken);
 }

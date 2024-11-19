@@ -1,5 +1,8 @@
-﻿namespace KinopoiskDB.Core.Enum;
+﻿using System.Text.Json.Serialization;
 
+namespace KinopoiskDB.Core.Enum;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum Month
 {
     January = 1,

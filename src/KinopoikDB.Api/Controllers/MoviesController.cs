@@ -74,30 +74,19 @@ public class MoviesController : ControllerBase
         var films = await _kinopoiskService.AddFilms(premiereRequest, cancellationToken);
         return Ok(films);
     }
-    /// <summary>
-    /// Тестовое удаление премьер за прошлый месяц
-    /// </summary>
-    ///  <remarks>Работает автоматически, будет удаление с 1 числа по конец месяца</remarks>
-    /// <returns></returns>
-    [HttpDelete("old-premieres")]
-    [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Delete()
-    {
-        await _kinopoiskService.Delete();
-        return Ok();
-    }
+
     /// <summary>
     /// Здесь можно посмотреть все фильм которые есть постранично!
     /// </summary>
     ///  <remarks>Нужно указать Page - номер страницы и PageSize - количество фильмов на странице</remarks>
-    /// <param name="pagedResponse"></param>
+    /// <param name="pagedRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Пагинированный список</returns>
     [HttpGet("all-films")]
     [ProducesResponseType(typeof(List<MovieDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllMoviesAsync([FromQuery] PagedResponse<MovieDto> pagedResponse, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllMoviesAsync([FromQuery] PagedRequest<MovieDto> pagedRequest, [FromQuery] SortRequest<MovieDto> sortRequest, CancellationToken cancellationToken)
     {
-        var premieres = await _kinopoiskService.GetAllMoviesAsync(pagedResponse, cancellationToken);
+        var premieres = await _kinopoiskService.GetAllMoviesAsync(pagedRequest, sortRequest, cancellationToken);
         return Ok(premieres);
     }
 }
