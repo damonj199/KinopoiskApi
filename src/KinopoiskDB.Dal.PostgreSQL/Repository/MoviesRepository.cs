@@ -63,6 +63,9 @@ public sealed class MoviesRepository : BaseRepository, IMoviesRepository
 
     public async Task<IReadOnlyList<Movie>> GetAllMoviesAsync(int page, int pageSize, SortableFields sortField, SortOrder order, CancellationToken cancellationToken)
     {
+        if(pageSize <= 0 || page <= 0) 
+            throw new ArgumentOutOfRangeException("Page and pageSize must be greater than zero.");
+        
         var allMovies = await Context.Movies
             .AsNoTracking()
             .Sort<Movie>(sortField.ToString(), order)

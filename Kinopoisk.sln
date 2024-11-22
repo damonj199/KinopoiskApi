@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskDB.Infrastructure"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{736BF96A-F734-4ED3-BE3B-EF7461AEB4A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesRepositoryTests", "tests\MoviesRepositoryTests\MoviesRepositoryTests.csproj", "{688C0417-D8C2-4AC0-9C54-ED812A8F6A57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,10 @@ Global
 		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50BEBA0B-D302-4300-94DE-8F41BE3B4E0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{688C0417-D8C2-4AC0-9C54-ED812A8F6A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{688C0417-D8C2-4AC0-9C54-ED812A8F6A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{688C0417-D8C2-4AC0-9C54-ED812A8F6A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{688C0417-D8C2-4AC0-9C54-ED812A8F6A57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +65,7 @@ Global
 		{97C45861-5635-4F4D-8FAC-08EA44ED83D6} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
 		{D9208BF9-AA5B-4421-905A-22B70C2A835D} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
 		{166F61B9-2BBA-4A2B-958C-C65BB1F8AE85} = {7E8FA774-AD64-421D-B37F-ED6A21778414}
+		{688C0417-D8C2-4AC0-9C54-ED812A8F6A57} = {736BF96A-F734-4ED3-BE3B-EF7461AEB4A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CDAF61D7-7FA7-4AA2-A6EF-41D053C18BF6}
