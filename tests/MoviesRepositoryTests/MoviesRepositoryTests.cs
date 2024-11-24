@@ -17,24 +17,24 @@ public class MoviesRepositoryTests
             .Options;
     }
 
-    [Fact]
-    public async Task AddMoviesAsync_ShouldAddIfThereIsNoMovie()
+    [Fact(DisplayName = "РџСЂРё РЅР°Р»РёС‡РёРё РІ СЃРїРёСЃРєРµ СѓРЅРёРєР°Р»СЊРЅРѕРіРѕ С„РёР»СЊРјР°, РґРѕР±Р°РІР»СЏРµРј РµРіРѕ РІ Р±Р°Р·Сѓ")]
+    public async Task AddMoviesAsync_UniqueMoviesList_ShouldAddIfThereIsNoMovie()
     {
         //Arrange
         using var context = new KinopoiskDbContext(_dboptions);
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 111, NameRu = "Фильм 1", PremiereRu = new DateOnly(2024, 11, 1) },
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 222, NameRu = "Фильм 2", PremiereRu = new DateOnly(2024, 11, 15) },
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 333, NameRu = "Фильм 3", PremiereRu = new DateOnly(2024, 12, 1) }
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 111, NameRu = "С„РёР»СЊРј 1", PremiereRu = new DateOnly(2024, 11, 1) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 222, NameRu = "С„РёР»СЊРј 2", PremiereRu = new DateOnly(2024, 11, 15) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 333, NameRu = "С„РёР»СЊРј 3", PremiereRu = new DateOnly(2024, 12, 1) }
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
 
         var repo = new MoviesRepository(context);
 
-        var filmNew = new List<Movie> { new Movie { Id = Guid.NewGuid(), KinopoiskId = 123, NameRu = "Лучшая новинка", PremiereRu = new DateOnly(2024, 12, 31) } };
+        var filmNew = new List<Movie> { new Movie { Id = Guid.NewGuid(), KinopoiskId = 123, NameRu = "РєР°РєРѕР№ С‚Рѕ РЅРѕРІС‹Р№ С„РёР»СЊРј", PremiereRu = new DateOnly(2024, 12, 31) } };
 
         //Actions
         var result = await repo.AddMoviesAsync(filmNew, CancellationToken.None);
@@ -45,7 +45,7 @@ public class MoviesRepositoryTests
         result.Should().Contain(m => m.KinopoiskId == 123);
     }
 
-    [Fact]
+    [Fact(DisplayName = "РџСЂРё РЅР°Р»РёС‡РёРё С„РёР»СЊРјРѕРІ РѕР±РЅРѕРІР»СЏРµРј РґР°РЅРЅС‹Рµ Рѕ РЅРёС…")]
     public async Task AddMoviesAsync_ShouldUpdateIfThereIsMovieAndAdd()
     {
         //Arrange
@@ -53,9 +53,9 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 111, NameRu = "Фильм 1", PremiereRu = new DateOnly(2024, 11, 1) },
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 222, NameRu = "Фильм 2", PremiereRu = new DateOnly(2024, 11, 15) },
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 333, NameRu = "Фильм 3", PremiereRu = new DateOnly(2024, 12, 1) }
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 111, NameRu = "С„РёР»СЊРј 1", PremiereRu = new DateOnly(2024, 11, 1) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 222, NameRu = "С„РёР»СЊРј 2", PremiereRu = new DateOnly(2024, 11, 15) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 333, NameRu = "С„РёР»СЊРј 3", PremiereRu = new DateOnly(2024, 12, 1) }
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
@@ -64,9 +64,9 @@ public class MoviesRepositoryTests
 
         var filmNew = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 222, NameRu = "Лучшая новинка", PremiereRu = new DateOnly(2024, 12, 31) },
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 111, NameRu = "Cамый лучший фильм 1", PremiereRu = new DateOnly(2024, 11, 1) },
-            new Movie { Id = Guid.NewGuid(), KinopoiskId = 123, NameRu = "Cамый новый", PremiereRu = new DateOnly(2022, 1, 1) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 222, NameRu = "РєР°РєР°СЏ С‚Рѕ РЅРѕРІРёРЅРєР°", PremiereRu = new DateOnly(2024, 12, 31) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 111, NameRu = "CР°Р»С‹Р№ Р»СѓС‡С€РёР№ С„РёР»СЊРј 1", PremiereRu = new DateOnly(2024, 11, 1) },
+            new Movie { Id = Guid.NewGuid(), KinopoiskId = 123, NameRu = "РЎР°РјС‹Р№ РЅРѕРІС‹Р№", PremiereRu = new DateOnly(2022, 1, 1) },
         };
 
         //Actions
@@ -76,7 +76,7 @@ public class MoviesRepositoryTests
         result.Should().NotBeNull();
         result.Count.Should().Be(3);
         result.Should().Contain(m => m.PremiereRu == new DateOnly(2024, 12, 31));
-        result.Should().Contain(m => m.NameRu == "Лучшая новинка");
+        result.Should().Contain(m => m.NameRu == "РЎР°РјС‹Р№ РЅРѕРІС‹Р№");
         result.Should().Contain(m => m.KinopoiskId == 123);
 
     }
@@ -89,9 +89,9 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 1", PremiereRu = new DateOnly(2024, 11, 1) },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 2", PremiereRu = new DateOnly(2024, 11, 15) },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 3", PremiereRu = new DateOnly(2024, 12, 1) }
+            new Movie { Id = Guid.NewGuid(), NameRu = "С„РёР»СЊРј 1", PremiereRu = new DateOnly(2024, 11, 1) },
+            new Movie { Id = Guid.NewGuid(), NameRu = "С„РёР»СЊРј 2", PremiereRu = new DateOnly(2024, 11, 15) },
+            new Movie { Id = Guid.NewGuid(), NameRu = "С„РёР»СЊРј 3", PremiereRu = new DateOnly(2024, 12, 1) }
         };
 
         context.Movies.AddRange(movies);
@@ -107,8 +107,8 @@ public class MoviesRepositoryTests
         //Assert
         result.Should().NotBeNull();
         result.Count.Should().Be(2);
-        result.Should().Contain(m => m.NameRu == "Фильм 1");
-        result.Should().Contain(m => m.NameRu == "Фильм 2");
+        result.Should().Contain(m => m.NameRu == "С„РёР»СЊРј 1");
+        result.Should().Contain(m => m.NameRu == "С„РёР»СЊРј 2");
     }
 
     [Fact]
@@ -119,9 +119,9 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie{Id = Guid.NewGuid(), NameRu = "Фильм первый", NameEn = "Films One"},
-            new Movie{Id = Guid.NewGuid(), NameRu = "Фильм второй", NameEn = "Films Two"},
-            new Movie{Id = Guid.NewGuid(), NameRu = "Другой", NameEn = "Unrelated"},
+            new Movie{Id = Guid.NewGuid(), NameRu = "С„РёР»СЊРј РїРµСЂРІС‹Р№", NameEn = "Films One"},
+            new Movie{Id = Guid.NewGuid(), NameRu = "С„РёР»СЊРј РІС‚РѕСЂРѕР№", NameEn = "Films Two"},
+            new Movie{Id = Guid.NewGuid(), NameRu = "РґСЂСѓРіРѕР№", NameEn = "Unrelated"},
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
@@ -129,7 +129,7 @@ public class MoviesRepositoryTests
         var repo = new MoviesRepository(context);
 
         //Actions
-        var result = await repo.SearchMoviesByNameAsync("Фильм", CancellationToken.None);
+        var result = await repo.SearchMoviesByNameAsync("С„РёР»СЊРј", CancellationToken.None);
 
         //Assert
         result.Should().NotBeNull();
@@ -146,15 +146,15 @@ public class MoviesRepositoryTests
 
         var allMovies = new List<Movie>
         {
-            new Movie {Id = Guid.NewGuid(), Year = 2012, NameRu = "Какой то фильм 1", PremiereRu = new DateOnly(2014, 10, 4)},
-            new Movie {Id = Guid.NewGuid(), Year = 2015, NameRu = "Какой то фильм 2", PremiereRu = new DateOnly(2024, 11, 7)},
-            new Movie {Id = Guid.NewGuid(), Year = 2011, NameRu = "Какой то фильм 3", PremiereRu = new DateOnly(2014, 10, 4)},
-            new Movie {Id = Guid.NewGuid(), Year = 2014, NameRu = "Какой то фильм 4", PremiereRu = new DateOnly(2015, 1, 14)},
-            new Movie {Id = Guid.NewGuid(), Year = 2012, NameRu = "Какой то фильм 5", PremiereRu = new DateOnly(2017, 3, 24)},
-            new Movie {Id = Guid.NewGuid(), Year = 2020, NameRu = "Какой то фильм 6", PremiereRu = new DateOnly(2014, 10, 14)},
-            new Movie {Id = Guid.NewGuid(), Year = 2021, NameRu = "Какой то фильм 7", PremiereRu = new DateOnly(2019, 11, 4)},
-            new Movie {Id = Guid.NewGuid(), Year = 2022, NameRu = "Какой то фильм 8", PremiereRu = new DateOnly(2014, 12, 5)},
-            new Movie {Id = Guid.NewGuid(), Year = 2022, NameRu = "Какой то фильм 9", PremiereRu = new DateOnly(2015, 11, 4)}
+            new Movie {Id = Guid.NewGuid(), Year = 2012, NameRu = "Р¤РёР»СЊРј 1", PremiereRu = new DateOnly(2014, 10, 4)},
+            new Movie {Id = Guid.NewGuid(), Year = 2015, NameRu = "Р¤РёР»СЊРј 2", PremiereRu = new DateOnly(2024, 11, 7)},
+            new Movie {Id = Guid.NewGuid(), Year = 2011, NameRu = "Р¤РёР»СЊРј 3", PremiereRu = new DateOnly(2014, 10, 4)},
+            new Movie {Id = Guid.NewGuid(), Year = 2014, NameRu = "Р¤РёР»СЊРј 4", PremiereRu = new DateOnly(2015, 1, 14)},
+            new Movie {Id = Guid.NewGuid(), Year = 2012, NameRu = "Р¤РёР»СЊРј 5", PremiereRu = new DateOnly(2017, 3, 24)},
+            new Movie {Id = Guid.NewGuid(), Year = 2020, NameRu = "Р¤РёР»СЊРј 6", PremiereRu = new DateOnly(2014, 10, 14)},
+            new Movie {Id = Guid.NewGuid(), Year = 2021, NameRu = "Р¤РёР»СЊРј 7", PremiereRu = new DateOnly(2019, 11, 4)},
+            new Movie {Id = Guid.NewGuid(), Year = 2022, NameRu = "Р¤РёР»СЊРј 8", PremiereRu = new DateOnly(2014, 12, 5)},
+            new Movie {Id = Guid.NewGuid(), Year = 2022, NameRu = "Р¤РёР»СЊРј 9", PremiereRu = new DateOnly(2015, 11, 4)}
         };
         context.Movies.AddRange(allMovies);
         await context.SaveChangesAsync();
@@ -179,9 +179,7 @@ public class MoviesRepositoryTests
 
         var repo = new MoviesRepository(context);
 
-        //Action
-
-        //Assert
+        //Action Assert
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             repo.GetAllMoviesAsync(0, 5, KinopoiskDB.Core.Enum.SortableFields.Year, KinopoiskDB.Core.Enum.SortOrder.ASC, CancellationToken.None));
     }
@@ -194,12 +192,12 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 1", Genres = new List<Genre> { new Genre { Value = "Боевик" } },
-                Countries = new List<Country> { new Country { Value = "США" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 2", Genres = new List<Genre> { new Genre { Value = "Комедия" } },
-                Countries = new List<Country> { new Country { Value = "Франция" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 3", Genres = new List<Genre> { new Genre { Value = "Боевик" }, new Genre { Value = "Триллер" } },
-                Countries = new List<Country> { new Country { Value = "Франция" }, new Country { Value = "Иран" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 1", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" } },
+                Countries = new List<Country> { new Country { Value = "РЎРЁРђ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 2", Genres = new List<Genre> { new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 3", Genres = new List<Genre> { new Genre { Value = "РЈР¶Р°СЃС‹" }, new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" }, new Country { Value = "РСЂР°РЅ" } } },
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
@@ -211,7 +209,7 @@ public class MoviesRepositoryTests
 
         //Assert
         Assert.NotNull(result);
-        result.Count.Should().Be(3); // должны вернуться все фильмы
+        result.Count.Should().Be(3);
     }
 
     [Fact]
@@ -221,24 +219,24 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 1", Genres = new List<Genre> { new Genre { Value = "Боевик" } },
-                Countries = new List<Country> { new Country { Value = "США" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 2", Genres = new List<Genre> { new Genre { Value = "Комедия" } },
-                Countries = new List<Country> { new Country { Value = "Франция" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 3", Genres = new List<Genre> { new Genre { Value = "Боевик" }, new Genre { Value = "Триллер" } },
-                Countries = new List<Country> { new Country { Value = "Франция" }, new Country { Value = "Иран" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 1", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" } },
+                Countries = new List<Country> { new Country { Value = "РЎРЁРђ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 2", Genres = new List<Genre> { new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 3", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" }, new Genre { Value = "РўСЂРёР»Р»РµСЂ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" }, new Country { Value = "РСЂР°РЅ" } } },
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
 
         var repo = new MoviesRepository(context);
 
-        var result = await repo.GetMoviesByFilterAsync("Боевик", "", CancellationToken.None);
+        var result = await repo.GetMoviesByFilterAsync("Р‘РѕРµРІРёРє", "", CancellationToken.None);
 
         Assert.NotNull(result);
         result.Count.Should().Be(2);
-        result.Should().Contain(m => m.NameRu == "Фильм 1");
-        result.Should().Contain(m => m.NameRu == "Фильм 3");
+        result.Should().Contain(m => m.NameRu == "Р¤РёР»СЊРј 1");
+        result.Should().Contain(m => m.NameRu == "Р¤РёР»СЊРј 3");
     }
 
     [Fact]
@@ -248,24 +246,24 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 1", Genres = new List<Genre> { new Genre { Value = "Боевик" } },
-                Countries = new List<Country> { new Country { Value = "США" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 2", Genres = new List<Genre> { new Genre { Value = "Комедия" } },
-                Countries = new List<Country> { new Country { Value = "Франция" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 3", Genres = new List<Genre> { new Genre { Value = "Боевик" }, new Genre { Value = "Триллер" } },
-                Countries = new List<Country> { new Country { Value = "Франция" }, new Country { Value = "Иран" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 1", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" } },
+                Countries = new List<Country> { new Country { Value = "РЎРЁРђ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 2", Genres = new List<Genre> { new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 3", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" }, new Genre { Value = "РўСЂРёР»Р»РµСЂ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" }, new Country { Value = "РСЂР°РЅ" } } },
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
 
         var repo = new MoviesRepository(context);
 
-        var result = await repo.GetMoviesByFilterAsync(null, "Франция", CancellationToken.None);
+        var result = await repo.GetMoviesByFilterAsync(null, "Р¤СЂР°РЅС†РёСЏ", CancellationToken.None);
 
         Assert.NotNull(result);
         result.Count.Should().Be(2);
-        result.Should().Contain(m => m.NameRu == "Фильм 2");
-        result.Should().Contain(m => m.NameRu == "Фильм 3");
+        result.Should().Contain(m => m.NameRu == "Р¤РёР»СЊРј 2");
+        result.Should().Contain(m => m.NameRu == "Р¤РёР»СЊРј 3");
     }
 
     [Fact]
@@ -275,25 +273,25 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 1", Genres = new List<Genre> { new Genre { Value = "Боевик" } },
-                Countries = new List<Country> { new Country { Value = "США" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 2", Genres = new List<Genre> { new Genre { Value = "Комедия" } },
-                Countries = new List<Country> { new Country { Value = "Франция" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 3", Genres = new List<Genre> { new Genre { Value = "Боевик" }, new Genre { Value = "Триллер" } },
-                Countries = new List<Country> { new Country { Value = "Франция" }, new Country { Value = "Иран" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 4", Genres = new List<Genre> { new Genre { Value = "Ужасы" } },
-                Countries = new List<Country> { new Country { Value = "США" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 1", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" } },
+                Countries = new List<Country> { new Country { Value = "РЎРЁРђ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 2", Genres = new List<Genre> { new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 3", Genres = new List<Genre> { new Genre { Value = "РўСЂРёР»Р»РµСЂ" }, new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" }, new Country { Value = "РСЂР°РЅ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 4", Genres = new List<Genre> { new Genre { Value = "РЈР¶Р°СЃС‹" } },
+                Countries = new List<Country> { new Country { Value = "РЎРЁРђ" } } },
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
 
         var repo = new MoviesRepository(context);
 
-        var result = await repo.GetMoviesByFilterAsync("Боевик", "США", CancellationToken.None);
+        var result = await repo.GetMoviesByFilterAsync("Р‘РѕРµРІРёРє", "РЎРЁРђ", CancellationToken.None);
 
         Assert.NotNull(result);
         result.Count.Should().Be(1);
-        result.Should().Contain(m => m.NameRu == "Фильм 1");
+        result.Should().Contain(m => m.NameRu == "Р¤РёР»СЊРј 1");
     }
 
     [Fact]
@@ -303,20 +301,20 @@ public class MoviesRepositoryTests
 
         var movies = new List<Movie>
         {
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 1", Genres = new List<Genre> { new Genre { Value = "Боевик" } },
-                Countries = new List<Country> { new Country { Value = "США" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 2", Genres = new List<Genre> { new Genre { Value = "Комедия" } },
-                Countries = new List<Country> { new Country { Value = "Франция" } } },
-            new Movie { Id = Guid.NewGuid(), NameRu = "Фильм 3", Genres = new List<Genre> { new Genre { Value = "Боевик" }, new Genre { Value = "Триллер" } },
-                Countries = new List<Country> { new Country { Value = "Франция" }, new Country { Value = "Иран" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 1", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" } },
+                Countries = new List<Country> { new Country { Value = "РЎРЁРђ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 2", Genres = new List<Genre> { new Genre { Value = "РљРѕРјРµРґРёСЏ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" } } },
+            new Movie { Id = Guid.NewGuid(), NameRu = "Р¤РёР»СЊРј 3", Genres = new List<Genre> { new Genre { Value = "Р‘РѕРµРІРёРє" }, new Genre { Value = "РўСЂРёР»Р»РµСЂ" } },
+                Countries = new List<Country> { new Country { Value = "Р¤СЂР°РЅС†РёСЏ" }, new Country { Value = "РСЂР°РЅ" } } },
         };
         context.Movies.AddRange(movies);
         await context.SaveChangesAsync();
 
         var repo = new MoviesRepository(context);
 
-        var result = await repo.GetMoviesByFilterAsync("Драмма", "Турциия", CancellationToken.None);
+        var result = await repo.GetMoviesByFilterAsync("Р”СЂР°РјРјР°", "РўСѓСЂС†РёСЏ", CancellationToken.None);
 
-        Assert.Empty(result); //нет фильмов с такой странной и жанром, должно быть пусто
+        Assert.Empty(result);
     }
 }
