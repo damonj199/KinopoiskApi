@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{736BF96A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesRepositoryTests", "tests\MoviesRepositoryTests\MoviesRepositoryTests.csproj", "{688C0417-D8C2-4AC0-9C54-ED812A8F6A57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoviesRepository.Tests.Intergation", "tests\MoviesRepository.Tests.Intergation\MoviesRepository.Tests.Intergation.csproj", "{5E97667B-DDE0-4843-A0B4-87A71F8261BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesRepositoryTests.Intergation", "tests\MoviesRepository.Tests.Intergation\MoviesRepositoryTests.Intergation.csproj", "{5E97667B-DDE0-4843-A0B4-87A71F8261BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
